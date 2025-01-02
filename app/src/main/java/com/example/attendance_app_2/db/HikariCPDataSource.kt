@@ -1,4 +1,4 @@
-package com.example.attendance_app_2
+package com.example.attendance_app_2.db
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
