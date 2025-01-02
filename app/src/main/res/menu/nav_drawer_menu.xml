@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/miMarkAttendance"
+        android:title="Mark Attendance"/>
+    <item
+        android:id="@+id/miUpdateAttendance"
+        android:title="Update Attendance"/>
+    <item
+        android:id="@+id/miAssignClass"
+        android:title="Assign Class"/>
+    <item
+        android:id="@+id/miSeeAssignments"
+        android:title="See Assignments"/>
+    <item
+        android:id="@+id/miAttendanceReport"
+        android:title="Attendance Report"/>
+    <item
+        android:id="@+id/miLogout"
+        android:title="Logout"/>
+</menu>
