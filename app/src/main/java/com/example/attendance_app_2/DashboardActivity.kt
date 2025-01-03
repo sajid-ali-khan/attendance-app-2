@@ -1,5 +1,6 @@
 package com.example.attendance_app_2
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -13,6 +14,7 @@ import com.example.attendance_app_2.fragments.HomeFragment
 import com.example.attendance_app_2.fragments.MarkAttendanceFragment
 import com.example.attendance_app_2.fragments.SeeAssignmentsFragment
 import com.example.attendance_app_2.fragments.UpdateAttendanceFragment
+import com.example.attendance_app_2.sharedPrefs.SharedPrefs
 
 class DashboardActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDashboardBinding
@@ -24,10 +26,20 @@ class DashboardActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawerLayout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        val role = SharedPrefs.getRole(this)
+
+        if (role == "teacher") {
+            handleTeacherUI()
+        } else if (role == "head") {
+            handleHODUI()
+        } else if (role == "admin") {
+            handleAdminUI()
         }
 
         toggle = ActionBarDrawerToggle(
@@ -85,9 +97,33 @@ class DashboardActivity : AppCompatActivity() {
                 }
                 R.id.miLogout -> {
                     //logout logic
+                    SharedPrefs.clearUserDetails(this);
+                    goToLoginScreen()
                 }
             }
+            binding.drawerLayout.closeDrawers()
             true
         }
+    }
+
+    fun goToLoginScreen(){
+        Intent(this, MainActivity::class.java).also {
+            startActivity(it)
+            finish()
+        }
+    }
+
+    fun handleTeacherUI(){
+        binding.navView.menu.findItem(R.id.miAssignClass).isVisible = false
+        binding.navView.menu.findItem(R.id.miSeeAssignments).isVisible = false
+    }
+
+    fun handleHODUI(){
+        binding.navView.menu.findItem(R.id.miAssignClass).isVisible = false
+    }
+
+    fun handleAdminUI(){
+        binding.navView.menu.findItem(R.id.miUpdateAttendance).isVisible = false
+        binding.navView.menu.findItem(R.id.miMarkAttendance).isVisible = false
     }
 }

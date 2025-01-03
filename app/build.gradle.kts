@@ -50,6 +50,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(libs.jtds)
+    implementation("net.sourceforge.jtds:jtds:1.3.1")
+
     implementation(libs.hikaricp)
 }
