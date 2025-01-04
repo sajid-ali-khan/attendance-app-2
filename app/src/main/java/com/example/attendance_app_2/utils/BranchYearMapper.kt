@@ -1,4 +1,4 @@
-package com.example.attendance_app_2.db
+package com.example.attendance_app_2.utils
 
 object BranchYearMapper {
     val codeToBranch = hashMapOf<Int, String>()

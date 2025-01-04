@@ -3,6 +3,7 @@ package com.example.attendance_app_2.db
 import android.content.Context
 import android.util.Log
 import com.example.attendance_app_2.models.Course
+import com.example.attendance_app_2.models.Faculty
 import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -71,6 +72,7 @@ object DataFetcher {
             }catch (e: Exception) {
                 Log.e(TAG, "fetchSemesters: Error", e)
             }
+            Log.d(TAG, "fetchSemesters: ${semesters}")
             semesters
         }
     }
@@ -126,6 +128,29 @@ object DataFetcher {
                 Log.e(TAG, "fetchSubjects: Error", e)
             }
             subjects
+        }
+    }
+
+    suspend fun fetchFaculties(): MutableList<Faculty> {
+        val query = "SELECT empid, name FROM FACULTY"
+        return withContext(Dispatchers.IO) {
+            val faculties = mutableListOf<Faculty>()
+            try{
+                DatabaseHelper.getConnection()?.use {connection ->
+                    connection.createStatement().use {st ->
+                        st.executeQuery(query).use {
+                            while (it.next()) {
+                                val empid = it.getString("empid")?:"xxxx"
+                                val name = it.getString("name")?:"xxxxxxxxxx"
+                                faculties.add(Faculty(empid, name))
+                            }
+                        }
+                    }
+                }
+            }catch(e:Exception){
+                Log.e(TAG, "fetchFaculties: Error", e)
+            }
+            faculties
         }
     }
 }
