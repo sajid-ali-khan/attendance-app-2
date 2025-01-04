@@ -20,11 +20,11 @@ class CustomSpinnerAdapter(
     }
 
     override fun getCount(): Int {
-        return itemList.size - 1 // Exclude the hint from dropdown
+        return itemList.size // Exclude the hint from dropdown
     }
 
     override fun getItem(position: Int): String? {
-        return itemList[position + 1] // Skip hint
+        return itemList[position] // Skip hint
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
