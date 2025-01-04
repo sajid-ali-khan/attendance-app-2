@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 
 class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
 
-    val TAG = "AssignClassFragment"
+    val TAG = this::class.java.simpleName
     lateinit var binding: FragmentAssignClassBinding
 
     //spinner adapters
@@ -35,7 +35,7 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
     lateinit var subjectAdapter: CustomSpinnerAdapter
 
     //spinners
-    lateinit var spSchemes: Spinner
+    lateinit var spScheme: Spinner
     lateinit var spBranch: Spinner
     lateinit var spSemester: Spinner
     lateinit var spSection: Spinner
@@ -63,7 +63,7 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
 
         binding = FragmentAssignClassBinding.bind(view)
 
-        spSchemes = binding.spScheme
+        spScheme = binding.spScheme
         spBranch = binding.spBranch
         spSemester = binding.spSemester
         spSection = binding.spSection
@@ -76,12 +76,7 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
 
 
         binding.btnAssignClass.setOnClickListener {
-            if (notAllSelected()){
-                Toast.makeText(requireContext(), "Please select all input fields", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if(isInvalidFaculty()){
+            if (notAllSelected() || isInvalidFaculty()){
                 return@setOnClickListener
             }
 
@@ -104,7 +99,7 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
                 withContext(Dispatchers.Main){
                     if (result) {
                         Toast.makeText(requireContext(), "Class assigned", Toast.LENGTH_SHORT).show()
-                        updateSubjects()
+                        spSubject.setSelection(0)
                         autoTvFaculty.setText("")
                     } else {
                         Toast.makeText(requireContext(), "Class not assigned", Toast.LENGTH_SHORT).show()
@@ -129,7 +124,7 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
     }
 
     private fun setUpSpinnerListeners() {
-        spSchemes.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spScheme.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -248,24 +243,21 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
     }
 
 
-    private fun initializeSpinnerAdapters() {
-        schemeAdapter = CustomSpinnerAdapter(requireContext(), "Select Scheme", mutableListOf())
-        spSchemes.adapter = schemeAdapter
-
-        branchAdapter = CustomSpinnerAdapter(requireContext(), "Select Branch", mutableListOf())
-        spBranch.adapter = branchAdapter
-
-        semesterAdapter = CustomSpinnerAdapter(requireContext(), "Select Semester", mutableListOf())
-        spSemester.adapter = semesterAdapter
-
-        subjectAdapter = CustomSpinnerAdapter(requireContext(), "Select Subject", mutableListOf())
-        spSubject.adapter = subjectAdapter
-
-        sectionAdapter = CustomSpinnerAdapter(requireContext(), "Select Section", mutableListOf())
-        spSection.adapter = sectionAdapter
-
-        updateSchemes() //starting point
+    private fun initializeSpinner(spinner: Spinner, title: String): CustomSpinnerAdapter {
+        val adapter = CustomSpinnerAdapter(requireContext(), title, mutableListOf())
+        spinner.adapter = adapter
+        return adapter
     }
+
+    private fun initializeSpinnerAdapters() {
+        schemeAdapter = initializeSpinner(spScheme, getString(R.string.select_scheme))
+        branchAdapter = initializeSpinner(spBranch, getString(R.string.select_branch))
+        semesterAdapter = initializeSpinner(spSemester, getString(R.string.select_semester))
+        subjectAdapter = initializeSpinner(spSubject, getString(R.string.select_subject))
+        sectionAdapter = initializeSpinner(spSection, getString(R.string.select_section))
+        updateSchemes()
+    }
+
 
     private fun updateSchemes() {
         lifecycleScope.launch {
@@ -344,8 +336,24 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
     }
 
     private fun notAllSelected(): Boolean {
-        return selectedScheme.isEmpty() || selectedBranch.isEmpty() || selectedSemester.isEmpty() || selectedSection.isEmpty() || selectedCourse.isEmpty()
+        val missingFields = mutableListOf<String>()
+        if (selectedScheme.isEmpty()) missingFields.add("Scheme")
+        if (selectedBranch.isEmpty()) missingFields.add("Branch")
+        if (selectedSemester.isEmpty()) missingFields.add("Semester")
+        if (selectedSection.isEmpty()) missingFields.add("Section")
+        if (selectedCourse.isEmpty()) missingFields.add("Course")
+
+        if (missingFields.isNotEmpty()) {
+            Toast.makeText(
+                requireContext(),
+                "Please select: ${missingFields.joinToString(", ")}",
+                Toast.LENGTH_SHORT
+            ).show()
+            return true
+        }
+        return false
     }
+
 
     private fun isInvalidFaculty(): Boolean {
         if(! faculties.any { it.id == selectedFaculty }){

@@ -41,7 +41,7 @@ object AssignClassHelper {
             try {
                 DatabaseHelper.getConnection()?.use { connection ->
                     connection.prepareStatement(query).use {pst ->
-                        pst.setInt(1, facultyId.toInt())
+                        pst.setString(1, facultyId)
                         pst.setInt(2, courseId.toInt())
                         pst.setString(3, section)
                         val rowsAffected = pst.executeUpdate()

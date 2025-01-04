@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 object DataFetcher {
-    const val TAG = "DataFetcher"
+    val TAG = this::class.java.simpleName
     suspend fun fetchSchemes(context: Context): MutableList<String> {
         val query = "SELECT DISTINCT scheme FROM course"
         return withContext(Dispatchers.IO) {
