@@ -134,11 +134,11 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
                 if (position != 0) {
                     selectedScheme = schemes[position - 1]
                     Log.d(TAG, "Selected Scheme: $selectedScheme")
-                    updateBranches()
                 } else {
                     selectedScheme = ""
                     Log.d(TAG, "No scheme selected")
                 }
+                updateBranches()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -156,11 +156,11 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
                 if (position != 0) {
                     selectedBranch = branches[position - 1].toString()
                     Log.d(TAG, "Selected Branch: $selectedBranch")
-                    updateSemesters()
                 } else {
                     selectedBranch = ""
                     Log.d(TAG, "No branch selected")
                 }
+                updateSemesters()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -178,11 +178,11 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
                 if (position != 0) {
                     selectedSemester = semesters[position - 1].toString()
                     Log.d(TAG, "onItemSelected: selected semester: $selectedSemester")
-                    updateSections()
                 } else {
                     selectedSemester = ""
                     Log.d(TAG, "No semester selected")
                 }
+                updateSections()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -200,11 +200,11 @@ class AssignClassFragment : Fragment(R.layout.fragment_assign_class) {
                 if (position != 0) {
                     selectedSection = sections[position - 1]
                     Log.d(TAG, "onItemSelected: selected section: $selectedSection")
-                    updateSubjects()
                 } else {
                     selectedSection = ""
                     Log.d(TAG, "No section selected")
                 }
+                updateSubjects()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header Section -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp">
+
+            <!-- Subject Name -->
+            <TextView
+                android:id="@+id/tvSubjectName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toTopOf="@+id/tvSubjectAbbreviation"
+                app:layout_constraintEnd_toStartOf="@+id/btnMark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="PPS(P)" />
+
+            <!-- Subject Abbreviation (Subtitle) -->
+            <TextView
+                android:id="@+id/tvSubjectAbbreviation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textStyle="italic"
+                android:ellipsize="none"
+                android:maxLines="2"
+                app:layout_constraintStart_toStartOf="@+id/tvSubjectName"
+                app:layout_constraintEnd_toStartOf="@+id/btnMark"
+                app:layout_constraintTop_toBottomOf="@+id/tvSubjectName"
+                tools:text="Programming and Problem Solving Lab" />
+
+            <!-- Mark Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mark"
+                android:paddingHorizontal="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Mark"
+                android:contentDescription="Mark attendance" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- History Section -->
+        <TextView
+            android:id="@+id/tvHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Session History"
+            android:textSize="14sp"
+            tools:text="Session - 1 (48/48)" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

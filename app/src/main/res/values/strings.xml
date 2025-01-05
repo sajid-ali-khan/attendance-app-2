@@ -7,6 +7,27 @@
     <string name="select_scheme">Select the scheme</string>
     <string name="select_branch">Select the branch</string>
     <string name="select_semester">Select the semester</string>
-    <string name="select_subject">Select the semester</string>
+    <string name="select_subject">Select the subject</string>
     <string name="select_section">Select the section</string>
+    <string name="query_fetchStudents">
+SELECT students.ROLLNO, students.NAME
+FROM students
+INNER JOIN (
+    SELECT course.BRANCH, course.sem, assignments.section
+    FROM assignments
+    INNER JOIN course
+    ON assignments.course_id = course.courseid
+    WHERE assignments.assignment_id = ?
+) assignedClass
+ON students.BRANCH = assignedClass.BRANCH
+WHERE students.sem = assignedClass.sem
+AND students.SEC = assignedClass.section
+    </string>
+    <string name="query_fetchSubjectAssigned">
+        select assignments.assignment_id, course.scode, left(course.branch, 1) as branch, course.sem, assignments.section
+from assignments
+inner join course
+on assignments.course_id = course.courseid
+where assignments.faculty_id = ?
+    </string>
 </resources>
