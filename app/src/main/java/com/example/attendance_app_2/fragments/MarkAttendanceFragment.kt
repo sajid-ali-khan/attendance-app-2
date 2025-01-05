@@ -1,6 +1,7 @@
 package com.example.attendance_app_2.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -21,6 +22,8 @@ class MarkAttendanceFragment : Fragment(R.layout.fragment_mark_attendance) {
     lateinit var binding: FragmentMarkAttendanceBinding
 
     lateinit var rvAssignmentsList : RecyclerView
+
+    val TAG = this::class.java.simpleName
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +50,10 @@ class MarkAttendanceFragment : Fragment(R.layout.fragment_mark_attendance) {
     }
 
     fun onClassClick(assignmentId: String){
-        Toast.makeText(requireContext(), "Class clicked: $assignmentId", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch{
+            val students = MarkAttendanceHelper.fetchStudents(requireContext(), assignmentId)
+            Log.d(TAG, "fetched Students = ${students}")
+        }
     }
 
     private fun showAssignedSubjects(assignedSubjects: List<AssignedSubject>){
