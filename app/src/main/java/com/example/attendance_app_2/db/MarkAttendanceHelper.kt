@@ -9,6 +9,8 @@ import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.attendance_app_2.R
+import com.example.attendance_app_2.models.SessionDetails
+import java.sql.Statement
 
 object MarkAttendanceHelper {
     val TAG = this::class.java.simpleName
@@ -65,4 +67,56 @@ object MarkAttendanceHelper {
             students
         }
     }
+
+    suspend fun saveAttendanceWithTimestamp(sessionDetails: SessionDetails, students: List<Student>): Boolean {
+        val sessionQuery = "INSERT INTO session (assignment_id, num_present, num_absent, date) VALUES (?, ?, ?, ?)"
+        val attendanceQuery = "INSERT INTO attendance (session_id, student_id, status) VALUES (?, ?, ?)"
+
+        return withContext(Dispatchers.IO) {
+            var sessionId = -1
+            var result = false
+            try{
+                DatabaseHelper.getConnection()?.use {connection ->
+                    connection.autoCommit = false
+
+                    try{
+                        connection.prepareStatement(sessionQuery, Statement.RETURN_GENERATED_KEYS).use {pst ->
+                            pst.setInt(1, sessionDetails.assignmentId)
+                            pst.setInt(2, sessionDetails.numPresent)
+                            pst.setInt(3, sessionDetails.numAbsent)
+                            pst.setDate(4, java.sql.Date.valueOf(sessionDetails.date))
+
+                            pst.executeUpdate()
+
+                            val generatedKeys = pst.generatedKeys
+                            if (generatedKeys.next()){
+                                sessionId = generatedKeys.getInt(1)
+                            }
+                        }
+
+                        connection.prepareStatement(attendanceQuery).use {
+                            for (student in students) {
+                                it.setInt(1, sessionId)
+                                it.setString(2, student.roll)
+                                it.setBoolean(3, student.attStatus)
+                                it.addBatch()
+                            }
+
+                            it.executeBatch()
+                        }
+                        connection.commit()
+                        result = true
+                    }catch(e: Exception){
+                        connection.rollback()
+                        Log.e(TAG, "saveAttendanceWithTimestamp: SQL error, rolling back", e)
+                    }
+                }
+            }catch(e: Exception){
+                Log.e(TAG, "saveAttendanceWithTimestamp: SQL error", e)
+            }
+            result
+        }
+    }
+
+
 }

@@ -50,4 +50,18 @@ class StudentAdapter(
     fun getUpdatedStudentList(): List<Student> {
         return studentList
     }
+
+    fun markAllAbsent() {
+        for ( i in 0 until studentList.size){
+            studentList[i].attStatus = false
+            notifyItemChanged(i)
+        }
+    }
+
+    fun markAllPresent() {
+        for ( i in 0 until studentList.size){
+            studentList[i].attStatus = true
+            notifyItemChanged(i)
+        }
+    }
 }

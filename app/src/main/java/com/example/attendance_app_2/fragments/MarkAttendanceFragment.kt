@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +54,19 @@ class MarkAttendanceFragment : Fragment(R.layout.fragment_mark_attendance) {
         lifecycleScope.launch{
             val students = MarkAttendanceHelper.fetchStudents(requireContext(), assignmentId)
             Log.d(TAG, "fetched Students = ${students}")
+            withContext(Dispatchers.Main){
+                safeNavigate {
+                    val attendanceFragment = AttendanceFragment()
+                    attendanceFragment.arguments = Bundle().apply {
+                        putParcelableArrayList("studentList", ArrayList(students))
+                        putString("assignmentId", assignmentId)
+                    }
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.container, attendanceFragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
         }
     }
 
@@ -63,4 +77,11 @@ class MarkAttendanceFragment : Fragment(R.layout.fragment_mark_attendance) {
         rvAssignmentsList.layoutManager = LinearLayoutManager(requireContext())
         rvAssignmentsList.adapter = adapter
     }
+
+    fun safeNavigate(action: () -> Unit) {
+        if (isAdded && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            action()
+        }
+    }
+
 }
