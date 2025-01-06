@@ -23,7 +23,7 @@ object SeeAssignmentsHelper {
                 "    on course.courseid = assignments.course_id\n" +
                 "    where assignments.section = ?\n" +
                 ")\n" +
-                "select result.scode, result.subname, faculty.name\n" +
+                "select result.scode, result.subname, faculty.name, faculty.EMPID\n" +
                 "from CourseAssignments result\n" +
                 "inner join faculty\n" +
                 "on result.faculty_id = faculty.EMPID\n"
@@ -42,7 +42,8 @@ object SeeAssignmentsHelper {
                                 val scode = it.getString("scode")
                                 val subname = it.getString("subname")
                                 val facultyName = it.getString("name")
-                                assignments.add(Assignment(scode, subname, facultyName))
+                                val facultyId = it.getString("empid")
+                                assignments.add(Assignment(scode, subname, facultyName, facultyId))
                             }
                         }
                     }

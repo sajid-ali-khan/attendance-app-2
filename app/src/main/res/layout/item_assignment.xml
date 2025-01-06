@@ -21,8 +21,8 @@
         android:text="Subject Name"/>
 
     <TextView
-        android:id="@+id/tv_faculty_name"
+        android:id="@+id/tv_faculty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Faculty Name"/>
+        android:text="Faculty"/>
 </LinearLayout>

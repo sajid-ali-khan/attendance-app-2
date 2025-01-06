@@ -22,7 +22,8 @@ class AssignmentAdapter(private val assignments: List<Assignment>) : RecyclerVie
         val assignment = assignments[position]
         binding.tvScode.text = assignment.scode
         binding.tvSubname.text = assignment.subname
-        binding.tvFacultyName.text = assignment.facultyName
+        val faculty = assignment.facultyName + " (" + assignment.facultyId + ")"
+        binding.tvFaculty.text = faculty
     }
 
     override fun getItemCount(): Int = assignments.size
