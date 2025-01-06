@@ -13,8 +13,11 @@ import com.example.attendance_app_2.databinding.FragmentAttendanceBinding
 import com.example.attendance_app_2.db.MarkAttendanceHelper
 import com.example.attendance_app_2.models.SessionDetails
 import com.example.attendance_app_2.models.Student
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -40,37 +43,19 @@ class AttendanceFragment : Fragment(R.layout.fragment_attendance) {
         displayStudents()
 
         binding.btnSaveAttednance.setOnClickListener{
-            val updatedStudentList = adapter.getUpdatedStudentList()
-            Log.d(TAG, "Updated Student List: $updatedStudentList")
-
-            // Calculate numPresent and numAbsent
-            val numPresent = updatedStudentList.count { it.attStatus }
-            val numAbsent = updatedStudentList.size - numPresent
-
-            // Get the current date in "yyyy-MM-dd" format
-            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-
-
-            val sessionDetails = SessionDetails(assignmentId.toInt(), numPresent, numAbsent, date)
-
-            lifecycleScope.launch{
-                val ack = MarkAttendanceHelper.saveAttendanceWithTimestamp(sessionDetails, updatedStudentList)
-
-                withContext(Dispatchers.Main){
-                    if(ack){
-                        Toast.makeText(requireContext(), "Attendance saved successfully", Toast.LENGTH_SHORT).show()
-                    }else{
-                        Toast.makeText(requireContext(), "Failed to save attendance", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
+            showSaveConfirmationDialog()
         }
 
         binding.btnAllAbsent.setOnClickListener{
             adapter.markAllAbsent()
         }
+
         binding.btnAllPresent.setOnClickListener{
             adapter.markAllPresent()
+        }
+
+        binding.btnCancel.setOnClickListener{
+            showCancelConfirmationDialog()
         }
     }
 
@@ -78,5 +63,86 @@ class AttendanceFragment : Fragment(R.layout.fragment_attendance) {
         adapter = StudentAdapter(studentsList as MutableList<Student>)
         binding.rvStudentList.layoutManager = LinearLayoutManager(requireContext())
         binding.rvStudentList.adapter = adapter
+    }
+
+    private fun saveAttendance(onComplete: (Boolean) -> Unit) {
+        lifecycleScope.launch {
+            val updatedStudentList = adapter.getUpdatedStudentList()
+            val numPresent = updatedStudentList.count { it.attStatus }
+            val numAbsent = updatedStudentList.size - numPresent
+            val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            val sessionDetails = SessionDetails(assignmentId.toInt(), numPresent, numAbsent, date)
+
+            val ack = MarkAttendanceHelper.saveAttendanceWithTimestamp(sessionDetails, updatedStudentList)
+            onComplete(ack)
+        }
+    }
+
+
+    private fun showSaveConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Save Changes")
+            .setMessage("Submit the attendance?")
+            .setPositiveButton("Yes") { _, _ ->
+                saveAttendance { isSaved ->
+                    if (isSaved) {
+                        successDialog()
+                    } else {
+                        tryAgainDialog()
+                    }
+                }
+            }
+            .setNeutralButton("Not yet") { _, _ ->
+
+            }
+            .create()
+            .show()
+    }
+
+    private fun successDialog(){
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Success")
+            .setMessage("Attendance saved successfully!")
+            .setPositiveButton("Ok") { _, _ ->
+                navigateBack()
+            }
+            .create()
+            .show()
+    }
+
+    private fun tryAgainDialog(){
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Try Again")
+            .setMessage("Something went wrong!!Please try again.")
+            .setPositiveButton("Ok") { _, _ ->
+
+            }
+            .create()
+            .show()
+    }
+
+
+    private fun showCancelConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Save Changes")
+            .setMessage("Do you want to save your changes?")
+            .setPositiveButton("Yes") { _, _ ->
+                saveAttendance { isSaved ->
+                    if (isSaved) {
+                        successDialog()
+                    } else {
+                        tryAgainDialog()
+                    }
+                }
+            }
+            .setNegativeButton("No") { _, _ ->
+                navigateBack()
+            }
+            .create()
+            .show()
+    }
+
+    private fun navigateBack() {
+        parentFragmentManager.popBackStack()
     }
 }

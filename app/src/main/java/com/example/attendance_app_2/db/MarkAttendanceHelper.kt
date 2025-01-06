@@ -114,6 +114,7 @@ object MarkAttendanceHelper {
             }catch(e: Exception){
                 Log.e(TAG, "saveAttendanceWithTimestamp: SQL error", e)
             }
+            Log.d(TAG, "The result of submitting: $result")
             result
         }
     }
