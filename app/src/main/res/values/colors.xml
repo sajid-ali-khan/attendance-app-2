@@ -5,4 +5,6 @@
     <color name="gray">#616161</color> <!-- Darker gray -->
     <color name="colorCancel">#F44336</color>
     <color name="colorSave">#4CAF50</color>
+    <color name="green">#A5D6A7</color>
+    <color name="light_grey">#BDBDBD</color>
 </resources>

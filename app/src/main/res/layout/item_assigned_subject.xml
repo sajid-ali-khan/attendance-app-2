@@ -7,8 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="6dp"
-    android:background="@color/white">
+    app:cardElevation="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,18 +24,16 @@
             <!-- Subject Name -->
             <TextView
                 android:id="@+id/tvSubjectName"
+                style="@style/CardHeaderText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
                 app:layout_constraintBottom_toTopOf="@+id/tvSubjectAbbreviation"
                 app:layout_constraintEnd_toStartOf="@+id/btnMark"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="PPS(P)" />
 
-            <!-- Subject Abbreviation (Subtitle) -->
+            <!-- Subject Abbreviation -->
             <TextView
                 android:id="@+id/tvSubjectAbbreviation"
                 android:layout_width="0dp"
@@ -44,8 +41,6 @@
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:textStyle="italic"
-                android:ellipsize="none"
-                android:maxLines="2"
                 app:layout_constraintStart_toStartOf="@+id/tvSubjectName"
                 app:layout_constraintEnd_toStartOf="@+id/btnMark"
                 app:layout_constraintTop_toBottomOf="@+id/tvSubjectName"
@@ -56,22 +51,30 @@
                 android:id="@+id/btnMark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mark"
+                android:minWidth="64dp"
+                android:minHeight="48dp"
                 android:paddingHorizontal="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Mark"
+                android:text="mark"
                 android:contentDescription="Mark attendance" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <!-- History Section -->
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="----Today----"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/tvHistory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Session History"
             android:textSize="14sp"
             tools:text="Session - 1 (48/48)" />
     </LinearLayout>

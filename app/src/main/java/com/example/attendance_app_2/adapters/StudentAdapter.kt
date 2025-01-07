@@ -31,8 +31,19 @@ class StudentAdapter(
         binding.tvRollNumber.text = student.roll
 
         binding.icAttStatus.setImageResource(
-            if (student.attStatus) R.drawable.icon_checked else R.drawable.icon_unchecked
+            if (student.attStatus) {
+                R.drawable.icon_checked
+            }else{
+                R.drawable.icon_unchecked
+            }
         )
+
+        //colors
+        if (student.attStatus){
+            binding.root.setBackgroundColor(holder.itemView.context.getColor(R.color.green))
+        }else{
+            binding.root.setBackgroundColor(holder.itemView.context.getColor(R.color.light_grey))
+        }
 
         binding.root.setOnClickListener {
             student.attStatus = !student.attStatus

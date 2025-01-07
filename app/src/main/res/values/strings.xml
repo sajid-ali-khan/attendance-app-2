@@ -30,4 +30,12 @@ inner join course
 on assignments.course_id = course.courseid
 where assignments.faculty_id = ?
     </string>
+    <string name="query_fetchTodaySessionDetails">
+    select convert(varchar, session.[timestamp], 0) as timestamp, [session].num_present, session.num_absent
+from [session]
+inner join assignments
+on assignments.assignment_id = [session].assignment_id
+and date = cast(getdate() as date)
+where assignments.assignment_id = ?
+    </string>
 </resources>
