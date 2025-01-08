@@ -16,7 +16,6 @@ import com.example.attendance_app_2.db.MarkAttendanceHelper
 import com.example.attendance_app_2.models.AssignedSubject
 import com.example.attendance_app_2.sharedPrefs.SharedPrefs
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
