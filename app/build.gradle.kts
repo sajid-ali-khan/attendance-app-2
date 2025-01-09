@@ -54,5 +54,6 @@ dependencies {
 
     implementation("net.sourceforge.jtds:jtds:1.3.1")
 
-    implementation(libs.hikaricp)
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+
 }

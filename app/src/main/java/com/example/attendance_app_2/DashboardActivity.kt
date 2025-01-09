@@ -2,18 +2,18 @@ package com.example.attendance_app_2
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.attendance_app_2.databinding.ActivityDashboardBinding
 import com.example.attendance_app_2.fragments.AssignClassFragment
-import com.example.attendance_app_2.fragments.AttendanceReportFragment
 import com.example.attendance_app_2.fragments.HomeFragment
 import com.example.attendance_app_2.fragments.MarkAttendanceFragment
+import com.example.attendance_app_2.fragments.PageHolderFragment
 import com.example.attendance_app_2.fragments.SeeAssignmentsFragment
 import com.example.attendance_app_2.fragments.UpdateAttendanceFragment
+import com.example.attendance_app_2.fragments.report_fragments.DefaultAttReportFragment
 import com.example.attendance_app_2.sharedPrefs.SharedPrefs
 
 class DashboardActivity : AppCompatActivity() {
@@ -54,10 +54,15 @@ class DashboardActivity : AppCompatActivity() {
 
         val homeFragment = HomeFragment()
         val assignClassFragment = AssignClassFragment()
-        val attendanceReportFragment = AttendanceReportFragment()
         val markAttendanceFragment = MarkAttendanceFragment()
         val seeAssignmentsFragment = SeeAssignmentsFragment()
         val updateAttendanceFragment = UpdateAttendanceFragment()
+
+
+        //attendance report fragments
+        val pageHolderFragment = PageHolderFragment()
+        val defaultAttReportFragment = DefaultAttReportFragment()
+
 
         supportFragmentManager.beginTransaction().apply {
             replace(binding.container.id, homeFragment).commit()
@@ -77,7 +82,7 @@ class DashboardActivity : AppCompatActivity() {
                 }
                 R.id.miAttendanceReport -> {
                     supportFragmentManager.beginTransaction().apply {
-                        replace(binding.container.id, attendanceReportFragment).commit()
+                        replace(binding.container.id, pageHolderFragment).commit()
                     }
                 }
                 R.id.miMarkAttendance -> {
