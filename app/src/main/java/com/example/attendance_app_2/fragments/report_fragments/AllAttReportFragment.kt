@@ -4,8 +4,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import com.example.attendance_app_2.R
 
-class AllAttReportFragment : Fragment() {
+class AllAttReportFragment : Fragment(R.layout.fragment_all_att_report) {
 
     val TAG = this::class.java.simpleName
 

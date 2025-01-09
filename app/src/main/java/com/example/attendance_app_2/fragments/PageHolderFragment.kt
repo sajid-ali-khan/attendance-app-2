@@ -14,8 +14,8 @@ import com.example.attendance_app_2.fragments.report_fragments.StudentAttReportF
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class PageHolderFragment : Fragment() {
-    lateinit var binding : FragmentPageHolderBinding
+class PageHolderFragment : Fragment(R.layout.fragment_page_holder) {
+    private lateinit var binding : FragmentPageHolderBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,8 +23,6 @@ class PageHolderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentPageHolderBinding.inflate(inflater, container, false)
-
-        val tabLayout = binding.tabLayout
         val view =  super.onCreateView(inflater, container, savedInstanceState)
 
         val fragmentList = arrayListOf<Fragment>(
@@ -40,15 +38,6 @@ class PageHolderFragment : Fragment() {
         )
 
         binding.viewPager.adapter = adapter
-
-        TabLayoutMediator(tabLayout, binding.viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> "Class Attendance"
-                1 -> "Student Attendance"
-                3 -> "All Attendance"
-                else -> null
-            }
-        }.attach()
 
         return view;
     }
