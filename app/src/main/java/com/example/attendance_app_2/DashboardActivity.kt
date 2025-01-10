@@ -83,8 +83,14 @@ class DashboardActivity : AppCompatActivity() {
                     }
                 }
                 R.id.miAttendanceReport -> {
-                    supportFragmentManager.beginTransaction().apply {
-                        replace(binding.container.id, pageHolderFragment).commit()
+                    if (role == "teacher"){
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(binding.container.id, defaultAttReportFragment).commit()
+                        }
+                    }else{
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(binding.container.id, pageHolderFragment).commit()
+                        }
                     }
                 }
                 R.id.miMarkAttendance -> {

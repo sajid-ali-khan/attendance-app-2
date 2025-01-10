@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.attendance_app_2.databinding.FragmentDefAttReportBinding
 import com.example.attendance_app_2.db.AttendanceReportHelper.generateSubjectAttendanceReport
 import com.example.attendance_app_2.db.MarkAttendanceHelper.fetchFacultyAssignments
@@ -16,6 +17,10 @@ import com.example.attendance_app_2.models.AttendanceRow1
 import com.example.attendance_app_2.sharedPrefs.SharedPrefs
 import kotlinx.coroutines.launch
 import com.example.attendance_app_2.R
+import com.example.attendance_app_2.adapters.AttendanceListAdapter
+import com.example.attendance_app_2.fragments.ReportViewFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class DefaultAttReportFragment : Fragment(R.layout.fragment_def_att_report) {
 
@@ -47,21 +52,14 @@ class DefaultAttReportFragment : Fragment(R.layout.fragment_def_att_report) {
                 return@launch
             }
 
-            // Fetch and display the attendance report for the first assigned subject
-            val assignmentId = assignedSubjects[0].assignmentId
-            Log.d(TAG, "Fetching attendance report for assignmentId: $assignmentId")
-
-            try {
-                val attendanceReport = getAttendanceReport(assignmentId)
-                Log.d(TAG, "Fetched attendance report size: ${attendanceReport.size}")
-
-                // Here you can update the UI with the attendance report (e.g., populate a RecyclerView)
-                // Example: binding.recyclerView.adapter = AttendanceAdapter(attendanceReport)
-
-            } catch (e: Exception) {
-                Log.e(TAG, "Error fetching attendance report", e)
-                Toast.makeText(requireContext(), "Failed to fetch attendance report", Toast.LENGTH_SHORT).show()
+            withContext(Dispatchers.Main){
+                val adapter = AttendanceListAdapter(assignedSubjects) { assignmentId ->
+                    onSubjectClick(assignmentId)
+                }
+                binding.rvAssignedSubjects.layoutManager = LinearLayoutManager(requireContext())
+                binding.rvAssignedSubjects.adapter = adapter
             }
+
         }
 
         return view
@@ -76,4 +74,24 @@ class DefaultAttReportFragment : Fragment(R.layout.fragment_def_att_report) {
     private suspend fun getAttendanceReport(assignmentId: String): List<AttendanceRow1> {
         return generateSubjectAttendanceReport(requireContext(), assignmentId)
     }
+
+    fun onSubjectClick(assignmentId: String): Unit{
+        lifecycleScope.launch {
+            val attendanceReport = getAttendanceReport(assignmentId)
+            Log.d(TAG, "fetched Attendance Reprot: ${attendanceReport}")
+            withContext(Dispatchers.Main){
+                val reportViewFragment = ReportViewFragment()
+                reportViewFragment.arguments = Bundle().apply {
+                    putString("flag", "1")
+                    putParcelableArrayList("attendanceReport", ArrayList(attendanceReport))
+                }
+
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.container, reportViewFragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+        }
+    }
+
 }
