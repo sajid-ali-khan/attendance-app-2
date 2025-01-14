@@ -38,4 +38,6 @@ on assignments.assignment_id = [session].assignment_id
 and date = cast(getdate() as date)
 where assignments.assignment_id = ?
     </string>
+    <string name="present">P</string>
+    <string name="absent">A</string>
 </resources>

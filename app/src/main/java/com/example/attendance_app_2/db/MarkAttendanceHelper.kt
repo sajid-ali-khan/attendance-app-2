@@ -31,7 +31,7 @@ object MarkAttendanceHelper {
                                 val sem = it.getString("sem")
                                 val section = it.getString("section")
                                 val className = formClassName(branch, sem, section)
-                                facultyAssignments.add(AssignedSubject(assignmentId, scode, className, ""))
+                                facultyAssignments.add(AssignedSubject(assignmentId, scode, className))
                             }
                         }
                     }

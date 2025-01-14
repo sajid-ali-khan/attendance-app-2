@@ -25,7 +25,6 @@ class AssignedSubjectAdapter(
         val classItem = classList[position]
         binding.tvSubjectName.text = classItem.subjectCode
         binding.tvSubjectAbbreviation.text = classItem.className
-        binding.tvHistory.text = classItem.history
 
         // Set button click listener
         binding.btnMark.setOnClickListener {

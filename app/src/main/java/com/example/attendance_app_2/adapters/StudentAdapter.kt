@@ -30,11 +30,11 @@ class StudentAdapter(
         binding.tvStudentName.text = student.name
         binding.tvRollNumber.text = student.roll
 
-        binding.icAttStatus.setImageResource(
+        binding.tvStatus.setText(
             if (student.attStatus) {
-                R.drawable.icon_checked
+                R.string.present
             }else{
-                R.drawable.icon_unchecked
+                R.string.absent
             }
         )
 

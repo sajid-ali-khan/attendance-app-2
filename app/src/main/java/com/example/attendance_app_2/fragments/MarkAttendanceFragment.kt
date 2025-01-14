@@ -43,12 +43,6 @@ class MarkAttendanceFragment : Fragment(R.layout.fragment_mark_attendance) {
                 return@launch
             }
             val assignedSubjects = MarkAttendanceHelper.fetchFacultyAssignments(requireContext(), empId)
-            assignedSubjects.forEach { subject ->
-                subject.history = MarkAttendanceHelper.fetchTodaySessionDetails(requireContext(), subject.assignmentId)
-                if (subject.history.isEmpty()){
-                    subject.history = "No attendance marked today yet."
-                }
-            }
             withContext(Dispatchers.Main){
                 showAssignedSubjects(assignedSubjects)
             }

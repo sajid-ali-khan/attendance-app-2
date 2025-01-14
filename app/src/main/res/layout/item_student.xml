@@ -5,9 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="8dp"
     android:background="@color/white">
 
 
@@ -17,15 +16,16 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <!-- Attendance Check Icon -->
-        <ImageView
-            android:id="@+id/icAttStatus"
+        <TextView
+            android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            tools:text="@string/absent"
+            android:textSize="24sp"
             android:layout_gravity="center"
-            android:padding="16dp"
-            app:srcCompat="@drawable/icon_checked"
-            android:contentDescription="Attendance status" />
+            android:layout_marginVertical="8dp"
+            android:layout_marginHorizontal="16dp"/>
+
 
         <!-- Student Information Section -->
         <LinearLayout
@@ -33,29 +33,28 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_vertical"
-            android:layout_weight="1"
-            android:paddingStart="12dp">
+            android:layout_weight="1">
 
             <!-- Student Name -->
             <TextView
-                android:id="@+id/tvStudentName"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvRollNumber"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Student Name"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                tools:text="John Doe"/>
+                tools:text="229X1A2851"/>
 
             <!-- Roll Number -->
             <TextView
-                android:id="@+id/tvRollNumber"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvStudentName"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Roll No: 123"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textColor="@color/gray"
-                tools:text="Roll No: 101"/>
+                tools:text="Patan Sajid Ali Khan"/>
         </LinearLayout>
     </LinearLayout>
 

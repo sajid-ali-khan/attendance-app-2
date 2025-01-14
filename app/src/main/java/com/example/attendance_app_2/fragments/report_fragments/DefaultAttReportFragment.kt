@@ -75,7 +75,7 @@ class DefaultAttReportFragment : Fragment(R.layout.fragment_def_att_report) {
         return generateSubjectAttendanceReport(requireContext(), assignmentId)
     }
 
-    fun onSubjectClick(assignmentId: String): Unit{
+    private fun onSubjectClick(assignmentId: String): Unit{
         lifecycleScope.launch {
             val attendanceReport = getAttendanceReport(assignmentId)
             Log.d(TAG, "fetched Attendance Reprot: ${attendanceReport}")
