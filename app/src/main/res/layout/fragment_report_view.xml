@@ -14,7 +14,7 @@
             android:layout_height="match_parent"
             >
             <TableLayout
-                android:id="@+id/att_table"
+                android:id="@+id/attTable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 >

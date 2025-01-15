@@ -34,7 +34,7 @@ object AttendanceReportHelper {
                                 val name = resultSet.getString("name")
                                 val percentage = resultSet.getFloat("Assignment_"+subject.id)
 
-                                attendanceReport.add(AttendanceRow(roll, name, hashMapOf(Pair(subject, percentage))))
+                                attendanceReport.add(AttendanceRow(roll, name, listOf(Pair(subject, percentage))))
                             }
                         }
                     }

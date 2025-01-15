@@ -79,11 +79,10 @@ class DefaultAttReportFragment : Fragment(R.layout.fragment_def_att_report) {
     private fun onSubjectClick(subject: Subject): Unit{
         lifecycleScope.launch {
             val attendanceReport = getAttendanceReport(subject)
-            Log.d(TAG, "fetched Attendance Reprot: ${attendanceReport}")
+            Log.d(TAG, "fetched Attendance Reprot: $attendanceReport")
             withContext(Dispatchers.Main){
                 val reportViewFragment = ReportViewFragment()
                 reportViewFragment.arguments = Bundle().apply {
-                    putString("flag", "1")
                     putParcelableArrayList("attendanceReport", ArrayList(attendanceReport))
                 }
 

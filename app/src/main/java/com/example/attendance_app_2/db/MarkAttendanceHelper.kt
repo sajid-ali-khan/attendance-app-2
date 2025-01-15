@@ -44,31 +44,6 @@ object MarkAttendanceHelper {
         }
     }
 
-    suspend fun fetchTodaySessionDetails(context: Context, assignmentId: String):String{
-        val query = context.getString(R.string.query_fetchTodaySessionDetails)
-        return withContext(Dispatchers.IO){
-            val history: StringBuilder = StringBuilder()
-            try{
-                DatabaseHelper.getConnection()?.use {connection ->
-                    connection.prepareStatement(query).use {pst ->
-                        pst.setString(1, assignmentId)
-                        pst.executeQuery().use {
-                            while(it.next()) {
-                                val timestamp = it.getString("timestamp")
-                                val numPresent = it.getInt("num_present")
-                                val total = it.getInt("num_absent") + numPresent
-                                history.append("$timestamp: $numPresent/$total\n")
-                            }
-                        }
-                    }
-                }
-            }catch(e: Exception){
-                Log.e(TAG, "fetchTodaySessionDetails: SQL error", e)
-            }
-            history.toString()
-        }
-    }
-
     suspend fun fetchStudents(context: Context, assignment_id: String): List<Student>{
         val query = context.getString(R.string.query_fetchStudents)
 
