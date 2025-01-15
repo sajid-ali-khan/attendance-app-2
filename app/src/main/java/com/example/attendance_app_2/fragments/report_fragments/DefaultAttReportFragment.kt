@@ -13,12 +13,13 @@ import com.example.attendance_app_2.databinding.FragmentDefAttReportBinding
 import com.example.attendance_app_2.db.AttendanceReportHelper.generateSubjectAttendanceReport
 import com.example.attendance_app_2.db.MarkAttendanceHelper.fetchFacultyAssignments
 import com.example.attendance_app_2.models.AssignedSubject
-import com.example.attendance_app_2.models.AttendanceRow1
 import com.example.attendance_app_2.sharedPrefs.SharedPrefs
 import kotlinx.coroutines.launch
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.adapters.AttendanceListAdapter
 import com.example.attendance_app_2.fragments.ReportViewFragment
+import com.example.attendance_app_2.models.AttendanceRow
+import com.example.attendance_app_2.models.Subject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -53,8 +54,8 @@ class DefaultAttReportFragment : Fragment(R.layout.fragment_def_att_report) {
             }
 
             withContext(Dispatchers.Main){
-                val adapter = AttendanceListAdapter(assignedSubjects) { assignmentId ->
-                    onSubjectClick(assignmentId)
+                val adapter = AttendanceListAdapter(assignedSubjects) { subject ->
+                    onSubjectClick(subject)
                 }
                 binding.rvAssignedSubjects.layoutManager = LinearLayoutManager(requireContext())
                 binding.rvAssignedSubjects.adapter = adapter
@@ -71,13 +72,13 @@ class DefaultAttReportFragment : Fragment(R.layout.fragment_def_att_report) {
     }
 
     // Function to fetch the attendance report for a specific assignment
-    private suspend fun getAttendanceReport(assignmentId: String): List<AttendanceRow1> {
-        return generateSubjectAttendanceReport(requireContext(), assignmentId)
+    private suspend fun getAttendanceReport(subject: Subject): List<AttendanceRow> {
+        return generateSubjectAttendanceReport(requireContext(), subject)
     }
 
-    private fun onSubjectClick(assignmentId: String): Unit{
+    private fun onSubjectClick(subject: Subject): Unit{
         lifecycleScope.launch {
-            val attendanceReport = getAttendanceReport(assignmentId)
+            val attendanceReport = getAttendanceReport(subject)
             Log.d(TAG, "fetched Attendance Reprot: ${attendanceReport}")
             withContext(Dispatchers.Main){
                 val reportViewFragment = ReportViewFragment()

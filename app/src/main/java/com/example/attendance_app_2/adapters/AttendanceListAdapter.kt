@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.attendance_app_2.models.AssignedSubject
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.databinding.ItemSubjectAttendanceBinding
+import com.example.attendance_app_2.models.Subject
 
 class AttendanceListAdapter(
     private val assignedSubjects: List<AssignedSubject>,
-    private val onSubjectClick: (String) -> Unit
+    private val onSubjectClick: (Subject) -> Unit
 ): RecyclerView.Adapter<AttendanceListAdapter.AttendanceListViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -26,11 +27,11 @@ class AttendanceListAdapter(
     ) {
         val binding: ItemSubjectAttendanceBinding = ItemSubjectAttendanceBinding.bind(holder.itemView)
         val assignedSubject = assignedSubjects[position]
-        binding.tvSubjectCode.text = assignedSubject.subjectCode
+        binding.tvSubjectCode.text = assignedSubject.subject.code
         binding.tvClassName.text = assignedSubject.className
 
         binding.root.setOnClickListener{
-            onSubjectClick(assignedSubject.assignmentId)
+            onSubjectClick(assignedSubject.subject)
         }
     }
 

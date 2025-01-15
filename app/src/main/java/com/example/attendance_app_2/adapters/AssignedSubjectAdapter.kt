@@ -23,12 +23,12 @@ class AssignedSubjectAdapter(
     override fun onBindViewHolder(holder: SubjectViewHolder, position: Int) {
         val binding: ItemAssignedSubjectBinding = ItemAssignedSubjectBinding.bind(holder.itemView)
         val classItem = classList[position]
-        binding.tvSubjectName.text = classItem.subjectCode
+        binding.tvSubjectName.text = classItem.subject.code
         binding.tvSubjectAbbreviation.text = classItem.className
 
         // Set button click listener
         binding.btnMark.setOnClickListener {
-            onClassClick(classItem.assignmentId) // Trigger navigation callback
+            onClassClick(classItem.subject.id.toString()) // Trigger navigation callback
         }
     }
 

@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.models.SessionDetails
+import com.example.attendance_app_2.models.Subject
 import java.sql.Statement
 
 object MarkAttendanceHelper {
@@ -25,13 +26,13 @@ object MarkAttendanceHelper {
                         pst.setString(1, empId)
                         pst.executeQuery().use {
                             while (it.next()){
-                                val assignmentId = it.getString("assignment_id")
+                                val assignmentId = it.getInt("assignment_id")
                                 val scode = it.getString("scode")
                                 val branch = it.getString("branch")
                                 val sem = it.getString("sem")
                                 val section = it.getString("section")
                                 val className = formClassName(branch, sem, section)
-                                facultyAssignments.add(AssignedSubject(assignmentId, scode, className))
+                                facultyAssignments.add(AssignedSubject(Subject(assignmentId, scode), className))
                             }
                         }
                     }
