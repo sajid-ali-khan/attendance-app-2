@@ -76,7 +76,6 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
         textView.text = text
         textView.setTypeface(null, android.graphics.Typeface.BOLD)
         textView.gravity = android.view.Gravity.CENTER
-        textView.setTextColor(requireContext().getColor(R.color.white))
         textView.setPadding(16, 16, 16, 16)
         return textView
     }

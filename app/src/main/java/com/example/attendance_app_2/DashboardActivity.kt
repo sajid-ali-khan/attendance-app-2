@@ -89,7 +89,7 @@ class DashboardActivity : AppCompatActivity() {
                         }
                     }else{
                         supportFragmentManager.beginTransaction().apply {
-                            replace(binding.container.id, pageHolderFragment).commit()
+                            replace(binding.container.id, defaultAttReportFragment).commit()
                         }
                     }
                 }
