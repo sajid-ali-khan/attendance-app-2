@@ -69,14 +69,17 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
         val textView = TextView(requireContext())
         textView.text = text
         textView.setPadding(16, 16, 16, 16)
+        textView.minWidth = 200;
+        textView.setBackgroundResource(R.drawable.tv_background)
         return textView
     }
     private fun createHeaderTextView(text: String): TextView {
         val textView = TextView(requireContext())
         textView.text = text
         textView.setTypeface(null, android.graphics.Typeface.BOLD)
-        textView.gravity = android.view.Gravity.CENTER
-        textView.setPadding(16, 16, 16, 16)
+        textView.setPadding(16, 24, 16, 24)
+        textView.minWidth = 200
+        textView.setBackgroundResource(R.drawable.tv_background)
         return textView
     }
 }
