@@ -153,4 +153,47 @@ object DataFetcher {
             faculties
         }
     }
+
+    suspend fun fetchAllBranches(context: Context): MutableList<Int> {
+        val query = "select distinct left(branch, 1) as branch from course order by branch"
+        return withContext(Dispatchers.IO){
+            val branches = mutableListOf<Int>()
+            try {
+                DatabaseHelper.getConnection()?.use {connection ->
+                    connection.createStatement().use {st->
+                        st.executeQuery(query).use {
+                            while (it.next()) {
+                                branches.add(it.getInt("branch"))
+                            }
+                        }
+                    }
+                }
+            }catch(e: Exception){
+                Log.e(TAG, "fetchAllBranches: SQL error", e)
+            }
+            branches
+        }
+    }
+
+    suspend fun fetchSemesters(context: Context, branch: String): MutableList<Int>{
+        val query = "select distinct sem from course where left(branch, 1) = ?"
+        return withContext(Dispatchers.IO){
+            val semesters = mutableListOf<Int>()
+            try {
+                DatabaseHelper.getConnection()?.use {connection ->
+                    connection.prepareStatement(query).use {pst ->
+                        pst.setString(1, branch)
+                        pst.executeQuery().use {
+                            while (it.next()) {
+                                semesters.add(it.getInt("sem"))
+                            }
+                        }
+                    }
+                }
+            }catch(e: Exception){
+                Log.e(TAG, "fetchSemesters: SQL error", e)
+            }
+            semesters
+        }
+    }
 }

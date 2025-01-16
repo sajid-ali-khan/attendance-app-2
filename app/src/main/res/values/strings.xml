@@ -10,7 +10,7 @@
     <string name="select_subject">Select the subject</string>
     <string name="select_section">Select the section</string>
     <string name="query_fetchStudents">
-SELECT students.ROLLNO, students.NAME
+SELECT students.ROLL, students.NAME
 FROM students
 INNER JOIN (
     SELECT course.BRANCH, course.sem, assignments.section

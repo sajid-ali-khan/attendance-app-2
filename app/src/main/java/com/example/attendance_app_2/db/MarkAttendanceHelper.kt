@@ -55,7 +55,7 @@ object MarkAttendanceHelper {
                         pst.setString(1, assignment_id)
                         pst.executeQuery().use {
                             while(it.next()){
-                                val roll = it.getString("ROLLNO")
+                                val roll = it.getString("ROLL")
                                 val name = it.getString("NAME")
                                 students.add(Student(roll, name, false))
                             }
@@ -71,7 +71,7 @@ object MarkAttendanceHelper {
 
     suspend fun saveAttendanceWithTimestamp(sessionDetails: SessionDetails, students: List<Student>): Boolean {
         val sessionQuery = "INSERT INTO session (assignment_id, num_present, num_absent, date) VALUES (?, ?, ?, ?)"
-        val attendanceQuery = "INSERT INTO attendance (session_id, student_id, status) VALUES (?, ?, ?)"
+        val attendanceQuery = "INSERT INTO attendance (session_id, roll, status) VALUES (?, ?, ?)"
 
         return withContext(Dispatchers.IO) {
             var sessionId = -1

@@ -3,6 +3,7 @@ package com.example.attendance_app_2.db
 import android.content.Context
 import android.util.Log
 import com.example.attendance_app_2.models.Assignment
+import com.example.attendance_app_2.models.Subject
 import com.example.attendance_app_2.utils.BranchYearMapper
 import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
@@ -67,5 +68,37 @@ object SeeAssignmentsHelper {
         }
         return "$semester$ext sem $branchName $section-section"
 
+    }
+
+    suspend fun fetchAssignmentIds(branch: String, semester: String, section: String): MutableList<Subject> {
+        val query = "SELECT assignments.assignment_id, course.scode\n" +
+                "FROM assignments\n" +
+                "INNER JOIN course\n" +
+                "on assignments.course_id = course.courseid\n" +
+                "WHERE left(course.branch, 1) = ?\n" +
+                "AND course.sem = ?\n" +
+                "AND assignments.section = ?"
+        return withContext(Dispatchers.IO){
+            val assignmentIds = mutableListOf<Subject>()
+            try {
+                DatabaseHelper.getConnection()?.use{connection ->
+                    connection.prepareStatement(query)?.use{pst ->
+                        pst.setString(1, branch)
+                        pst.setString(2, semester)
+                        pst.setString(3, section)
+                        pst.executeQuery().use {
+                            while (it.next()) {
+                                val id = it.getInt("assignment_id")
+                                val scode = it.getString("scode")
+                                assignmentIds.add(Subject(id, scode))
+                            }
+                        }
+                    }
+                }
+            }catch(e: Exception){
+                Log.e(TAG, "fetchAssignmentIds: SQL error",e)
+            }
+            assignmentIds
+        }
     }
 }

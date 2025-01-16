@@ -45,4 +45,36 @@ object AttendanceReportHelper {
             attendanceReport
         }
     }
+
+    suspend fun generateAllAttendanceReport(context: Context, assignmentIds: List<Subject>): List<AttendanceRow> {
+        val procedureCall = "EXEC GetAttendance @AssignmentIDs = ?"
+        val assignments = assignmentIds.joinToString(",") { it.id.toString() }
+
+        return withContext(Dispatchers.IO) {
+            val attendanceReport = mutableListOf<AttendanceRow>()
+            try {
+                DatabaseHelper.getConnection()?.use {connection ->
+                    connection.prepareStatement(procedureCall).use { pst ->
+                        pst.setString(1, assignments)
+                        pst.executeQuery().use { resultSet ->
+                            while (resultSet.next()) {
+                                val roll = resultSet.getString("roll")
+                                val name = resultSet.getString("name")
+                                val percentages = mutableListOf<Pair<Subject, Float>>()
+                                for (subject in assignmentIds) {
+                                    val percentage = resultSet.getFloat("Assignment_"+subject.id)
+                                    percentages.add(Pair(subject, percentage))
+                                }
+                                percentages.add(Pair(Subject(-1, "Total"), resultSet.getFloat("TotalAttendance")))
+                                attendanceReport.add(AttendanceRow(roll, name, percentages))
+                            }
+                        }
+                    }
+                }
+            }catch( e: Exception) {
+                Log.e(TAG, "generateAllAttendanceReport: SQL error", e)
+            }
+            attendanceReport
+        }
+    }
 }

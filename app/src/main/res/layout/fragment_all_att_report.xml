@@ -7,7 +7,7 @@
     tools:context=".fragments.report_fragments.AllAttReportFragment">
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/spBranch"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
-        android:id="@+id/spinner4"
+        android:id="@+id/spSem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -28,10 +28,10 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+        app:layout_constraintTop_toBottomOf="@+id/spBranch" />
 
     <Spinner
-        android:id="@+id/spinner5"
+        android:id="@+id/spSection"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -40,10 +40,10 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner4" />
+        app:layout_constraintTop_toBottomOf="@+id/spSem" />
 
     <EditText
-        android:id="@+id/editTextDate"
+        android:id="@+id/etFromDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -51,13 +51,13 @@
         android:hint="from"
         android:inputType="date"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toBottomOf="@+id/editTextDate2"
-        app:layout_constraintEnd_toStartOf="@+id/editTextDate2"
+        app:layout_constraintBottom_toBottomOf="@+id/etToDate"
+        app:layout_constraintEnd_toStartOf="@+id/etToDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editTextDate2" />
+        app:layout_constraintTop_toTopOf="@+id/etToDate" />
 
     <EditText
-        android:id="@+id/editTextDate2"
+        android:id="@+id/etToDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -68,17 +68,17 @@
         android:inputType="date"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editTextDate"
-        app:layout_constraintTop_toBottomOf="@+id/spinner5" />
+        app:layout_constraintStart_toEndOf="@+id/etFromDate"
+        app:layout_constraintTop_toBottomOf="@+id/spSection" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_generate_report"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="View Report"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextDate2"
+        app:layout_constraintTop_toBottomOf="@+id/etToDate"
         app:layout_constraintVertical_bias="0.086" />
 </androidx.constraintlayout.widget.ConstraintLayout>

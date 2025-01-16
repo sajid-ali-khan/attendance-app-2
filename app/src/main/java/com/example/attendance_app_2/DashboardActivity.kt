@@ -14,6 +14,7 @@ import com.example.attendance_app_2.fragments.MarkAttendanceFragment
 import com.example.attendance_app_2.fragments.PageHolderFragment
 import com.example.attendance_app_2.fragments.SeeAssignmentsFragment
 import com.example.attendance_app_2.fragments.UpdateAttendanceFragment
+import com.example.attendance_app_2.fragments.report_fragments.AllAttReportFragment
 import com.example.attendance_app_2.fragments.report_fragments.DefaultAttReportFragment
 import com.example.attendance_app_2.sharedPrefs.SharedPrefs
 
@@ -64,6 +65,7 @@ class DashboardActivity : AppCompatActivity() {
         //attendance report fragments
         val pageHolderFragment = PageHolderFragment()
         val defaultAttReportFragment = DefaultAttReportFragment()
+        val allAttReportFragment = AllAttReportFragment()
 
 
         supportFragmentManager.beginTransaction().apply {
@@ -89,7 +91,7 @@ class DashboardActivity : AppCompatActivity() {
                         }
                     }else{
                         supportFragmentManager.beginTransaction().apply {
-                            replace(binding.container.id, defaultAttReportFragment).commit()
+                            replace(binding.container.id, allAttReportFragment).commit()
                         }
                     }
                 }
