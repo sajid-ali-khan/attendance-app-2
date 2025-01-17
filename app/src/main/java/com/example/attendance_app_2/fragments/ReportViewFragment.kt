@@ -1,17 +1,25 @@
 package com.example.attendance_app_2.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TableLayout
 import android.widget.TableRow
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.databinding.FragmentReportViewBinding
+import com.example.attendance_app_2.fragments.helpers.ReportViewHelper
+import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.createHeader
+import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.createTextView
+import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.extractSubjects
+import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.filterAttendance
+import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.populateTable
 import com.example.attendance_app_2.models.AttendanceRow
+import com.example.attendance_app_2.models.Filter
 import com.example.attendance_app_2.models.Subject
 
 class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
@@ -19,6 +27,18 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
     private lateinit var spSymbol: Spinner
     private lateinit var spValue: Spinner
     private lateinit var spColumn: Spinner
+    private lateinit var tableLayout: TableLayout
+
+    var attendanceReport = emptyList<AttendanceRow>()
+
+    private lateinit var selectedSymbol: String
+    var selectedValue = 100
+    var selectedSubject = 0
+
+    var subs = emptyList<Subject>()
+
+    val symbols = listOf("<=", "<", ">", ">=")
+    val values = listOf(100, 75, 65, 40)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,11 +48,9 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
         spValue = binding.spValue
         spColumn = binding.spColumn
 
-        populateSpinner(listOf("<", "<=", ">", ">="), spSymbol)
-        populateSpinner(listOf("40","65", "75", "100"), spValue)
+        populateSpinner(symbols, spSymbol)
+        populateSpinner(values.map { it.toString() }, spValue)
 
-
-        var attendanceReport: List<AttendanceRow> = emptyList()
         arguments?.let {
             attendanceReport = it.getParcelableArrayList("attendanceReport") ?: emptyList()
         }
@@ -42,72 +60,62 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
             return
         }
 
-        val subs = extractSubjects(attendanceReport[0])
+        subs = extractSubjects(attendanceReport[0])
+        subs = subs.reversed()
         populateSpinner(subs.map { it.code }, spColumn)
 
-        val tableLayout = binding.attTable
-        populateTable(tableLayout, attendanceReport)
+        tableLayout = binding.attTable
+        populateTable(requireContext(), tableLayout, attendanceReport)
+
+        setUpFilterListeners();
 
     }
 
-    private fun extractSubjects(attendanceRow: AttendanceRow): List<Subject> {
-        val subjects = mutableListOf<Subject>()
-        for (subject in attendanceRow.percentages){
-            subjects.add(subject.first)
-        }
-        return subjects
-    }
-
-    private fun populateTable(table: TableLayout, attendanceReport: List<AttendanceRow>) {
-        table.addView(createHeader(attendanceReport[0]))
-
-        var even = false;
-        for (attRow in attendanceReport){
-            val row = TableRow(requireContext())
-            row.addView(createTextView(attRow.roll))
-            row.addView(createTextView(attRow.name))
-            for (subject in attRow.percentages){
-                row.addView(createTextView(subject.second.toString()))
+    private fun setUpFilterListeners(){
+        spSymbol.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selectedSymbol = symbols[position]
+                filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
             }
-            if (even){
-                row.setBackgroundResource(R.drawable.att_row_2)
-            }else{
-                row.setBackgroundResource(R.drawable.att_row_1)
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
             }
-            even = !even
-            table.addView(row)
+        }
+        spValue.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selectedValue = values[position]
+                filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+        spColumn.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                selectedSubject = position
+                filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
         }
     }
 
-    private fun createHeader(head: AttendanceRow): TableRow {
-        val header = TableRow(requireContext())
-        header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
-        header.setBackgroundResource(R.drawable.header_background)
-        header.addView(createHeaderTextView("ROLL NUMBER"))
-        header.addView(createHeaderTextView("NAME"))
-        for (subject in head.percentages){
-            header.addView(createHeaderTextView(subject.first.code))
-        }
-        return header
-    }
-
-    private fun createTextView(text: String): TextView {
-        val textView = TextView(requireContext())
-        textView.text = text
-        textView.setPadding(16, 16, 16, 16)
-        textView.minWidth = 200
-        textView.setBackgroundResource(R.drawable.tv_background)
-        return textView
-    }
-    private fun createHeaderTextView(text: String): TextView {
-        val textView = TextView(requireContext())
-        textView.text = text
-        textView.setTypeface(null, android.graphics.Typeface.BOLD)
-        textView.setPadding(16, 16, 16, 16)
-        textView.minWidth = 200
-        textView.setBackgroundResource(R.drawable.tv_background)
-        return textView
-    }
 
     private fun populateSpinner(items: List<String>, sp: Spinner){
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, items)
