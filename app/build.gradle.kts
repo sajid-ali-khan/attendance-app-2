@@ -54,6 +54,8 @@ dependencies {
 
     implementation("net.sourceforge.jtds:jtds:1.3.1")
 
-    implementation("androidx.viewpager2:viewpager2:1.1.0")
+    implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
+    implementation("com.google.android.material:material:1.9.0")
+
 
 }

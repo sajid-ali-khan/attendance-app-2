@@ -10,7 +10,6 @@ import com.example.attendance_app_2.databinding.ActivityDashboardBinding
 import com.example.attendance_app_2.fragments.AssignClassFragment
 import com.example.attendance_app_2.fragments.HomeFragment
 import com.example.attendance_app_2.fragments.MarkAttendanceFragment
-import com.example.attendance_app_2.fragments.PageHolderFragment
 import com.example.attendance_app_2.fragments.SeeAssignmentsFragment
 import com.example.attendance_app_2.fragments.SemesterDatesFragment
 import com.example.attendance_app_2.fragments.UpdateAttendanceFragment
@@ -64,7 +63,6 @@ class DashboardActivity : AppCompatActivity() {
 
 
         //attendance report fragments
-        val pageHolderFragment = PageHolderFragment()
         val defaultAttReportFragment = DefaultAttReportFragment()
         val allAttReportFragment = AllAttReportFragment()
 
@@ -85,15 +83,14 @@ class DashboardActivity : AppCompatActivity() {
                         replace(binding.container.id, assignClassFragment).commit()
                     }
                 }
-                R.id.miAttendanceReport -> {
-                    if (role == "teacher"){
-                        supportFragmentManager.beginTransaction().apply {
-                            replace(binding.container.id, defaultAttReportFragment).commit()
-                        }
-                    }else{
-                        supportFragmentManager.beginTransaction().apply {
-                            replace(binding.container.id, allAttReportFragment).commit()
-                        }
+                R.id.miDefaultAttendance -> {
+                    supportFragmentManager.beginTransaction().apply {
+                        replace(binding.container.id, defaultAttReportFragment).commit()
+                    }
+                }
+                R.id.miCustomAttendance -> {
+                    supportFragmentManager.beginTransaction().apply {
+                        replace(binding.container.id, allAttReportFragment).commit()
                     }
                 }
                 R.id.miMarkAttendance -> {
@@ -137,6 +134,7 @@ class DashboardActivity : AppCompatActivity() {
         binding.navView.menu.findItem(R.id.miAssignClass).isVisible = false
         binding.navView.menu.findItem(R.id.miSeeAssignments).isVisible = false
         binding.navView.menu.findItem(R.id.miSemesterDates).isVisible = false
+        binding.navView.menu.findItem(R.id.miCustomAttendance).isVisible = false
     }
 
     fun handleHODUI(){
@@ -147,5 +145,7 @@ class DashboardActivity : AppCompatActivity() {
     fun handleAdminUI(){
         binding.navView.menu.findItem(R.id.miUpdateAttendance).isVisible = false
         binding.navView.menu.findItem(R.id.miMarkAttendance).isVisible = false
+        binding.navView.menu.findItem(R.id.miDefaultAttendance).isVisible = false
+        binding.navView.menu.findItem(R.id.miCustomAttendance).isVisible = false
     }
 }

@@ -40,4 +40,5 @@ where assignments.assignment_id = ?
     </string>
     <string name="present">P</string>
     <string name="absent">A</string>
+    <string name="tabs">tabs</string>
 </resources>
