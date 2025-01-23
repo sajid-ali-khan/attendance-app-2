@@ -2,7 +2,6 @@ package com.example.attendance_app_2
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,6 +12,7 @@ import com.example.attendance_app_2.fragments.HomeFragment
 import com.example.attendance_app_2.fragments.MarkAttendanceFragment
 import com.example.attendance_app_2.fragments.PageHolderFragment
 import com.example.attendance_app_2.fragments.SeeAssignmentsFragment
+import com.example.attendance_app_2.fragments.SemesterDatesFragment
 import com.example.attendance_app_2.fragments.UpdateAttendanceFragment
 import com.example.attendance_app_2.fragments.report_fragments.AllAttReportFragment
 import com.example.attendance_app_2.fragments.report_fragments.DefaultAttReportFragment
@@ -60,6 +60,7 @@ class DashboardActivity : AppCompatActivity() {
         val markAttendanceFragment = MarkAttendanceFragment()
         val seeAssignmentsFragment = SeeAssignmentsFragment()
         val updateAttendanceFragment = UpdateAttendanceFragment()
+        val semesterDatesFragment = SemesterDatesFragment()
 
 
         //attendance report fragments
@@ -109,6 +110,10 @@ class DashboardActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().apply {
                         replace(binding.container.id, updateAttendanceFragment).commit()
                     }
+                }R.id.miSemesterDates -> {
+                    supportFragmentManager.beginTransaction().apply {
+                        replace(binding.container.id, semesterDatesFragment).commit()
+                    }
                 }
                 R.id.miLogout -> {
                     //logout logic
@@ -131,10 +136,12 @@ class DashboardActivity : AppCompatActivity() {
     fun handleTeacherUI(){
         binding.navView.menu.findItem(R.id.miAssignClass).isVisible = false
         binding.navView.menu.findItem(R.id.miSeeAssignments).isVisible = false
+        binding.navView.menu.findItem(R.id.miSemesterDates).isVisible = false
     }
 
     fun handleHODUI(){
         binding.navView.menu.findItem(R.id.miAssignClass).isVisible = false
+        binding.navView.menu.findItem(R.id.miSemesterDates).isVisible = false
     }
 
     fun handleAdminUI(){

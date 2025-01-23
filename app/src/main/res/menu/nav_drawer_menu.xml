@@ -19,6 +19,9 @@
         android:id="@+id/miAttendanceReport"
         android:title="Attendance Report"/>
     <item
+        android:id="@+id/miSemesterDates"
+        android:title="Semester Dates"/>
+    <item
         android:id="@+id/miLogout"
         android:title="Logout"/>
 </menu>

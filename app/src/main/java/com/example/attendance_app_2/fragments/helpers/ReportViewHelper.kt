@@ -1,15 +1,18 @@
 package com.example.attendance_app_2.fragments.helpers
 
 import android.content.Context
+import android.util.Log
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import android.widget.Toast
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.models.AttendanceRow
 import com.example.attendance_app_2.models.Filter
 import com.example.attendance_app_2.models.Subject
 
 object ReportViewHelper {
+    val TAG = this::class.java.simpleName
     fun extractSubjects(attendanceRow: AttendanceRow): List<Subject> {
         val subjects = mutableListOf<Subject>()
         for (subject in attendanceRow.percentages) {
@@ -20,6 +23,10 @@ object ReportViewHelper {
 
     fun populateTable(context: Context, tableLayout: TableLayout, attendanceReport: List<AttendanceRow>) {
         tableLayout.removeAllViews()
+        if (attendanceReport.isEmpty()){
+            Toast.makeText(context, "0 rows for the given filter", Toast.LENGTH_SHORT).show()
+            return
+        }
         tableLayout.addView(createHeader(context, attendanceReport[0]))
 
         var even = false;
@@ -72,13 +79,18 @@ object ReportViewHelper {
     }
 
     fun filterAttendance(context: Context, tableLayout: TableLayout, attendanceReport: List<AttendanceRow>, filter: Filter){
-        val subjectIndex = attendanceReport[0].percentages.indexOfFirst { it.first.id == filter.subjectId }
-        var filteredAttendance = when (filter.symbol){
-            "<=" -> attendanceReport.filter { it.percentages[subjectIndex].second <= filter.value }
-            "<" -> attendanceReport.filter { it.percentages[subjectIndex].second < filter.value }
-            ">" -> attendanceReport.filter { it.percentages[subjectIndex].second > filter.value }
-            ">=" -> attendanceReport.filter { it.percentages[subjectIndex].second >= filter.value }
-            else -> attendanceReport
+        var  filteredAttendance = emptyList<AttendanceRow>()
+        try{
+            val subjectIndex = attendanceReport[0].percentages.indexOfFirst { it.first.id == filter.subjectId }
+            filteredAttendance = when (filter.symbol){
+                "<=" -> attendanceReport.filter { it.percentages[subjectIndex].second <= filter.value }
+                "<" -> attendanceReport.filter { it.percentages[subjectIndex].second < filter.value }
+                ">" -> attendanceReport.filter { it.percentages[subjectIndex].second > filter.value }
+                ">=" -> attendanceReport.filter { it.percentages[subjectIndex].second >= filter.value }
+                else -> attendanceReport
+            }
+        }catch(e: Exception){
+            Log.e(TAG, "filterAttendance: SQL error "+ e.message)
         }
 
         populateTable(context, tableLayout, filteredAttendance)
