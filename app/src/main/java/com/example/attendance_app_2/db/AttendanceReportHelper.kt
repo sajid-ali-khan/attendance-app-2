@@ -3,6 +3,7 @@ package com.example.attendance_app_2.db
 import android.content.Context
 import android.util.Log
 import com.example.attendance_app_2.models.AttendanceRow
+import com.example.attendance_app_2.models.SemesterDates
 import com.example.attendance_app_2.models.Subject
 import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
@@ -13,7 +14,7 @@ object AttendanceReportHelper {
 
     suspend fun generateSubjectAttendanceReport(context: Context, subject: Subject): List<AttendanceRow> {
         // SQL procedure call string
-        val procedureCall = "EXEC GetAttendanceByAssignments @AssignmentIDs = ?"
+        val procedureCall = "EXEC GetAttendanceTotal @AssignmentIDs = ?"
         val attendanceReport = mutableListOf<AttendanceRow>()
 
         // Ensure that assignmentId is not empty
@@ -30,9 +31,9 @@ object AttendanceReportHelper {
 
                         pst.executeQuery().use {resultSet ->
                             while (resultSet.next()) {
-                                val roll = resultSet.getString("roll")
+                                val roll = resultSet.getString("rollnumber")
                                 val name = resultSet.getString("name")
-                                val percentage = resultSet.getFloat("Assignment_"+subject.id)
+                                val percentage = resultSet.getFloat("AttendancePercentage")
 
                                 attendanceReport.add(AttendanceRow(roll, name, listOf(Pair(subject, percentage))))
                             }
@@ -46,8 +47,8 @@ object AttendanceReportHelper {
         }
     }
 
-    suspend fun generateAllAttendanceReport(context: Context, assignmentIds: List<Subject>): List<AttendanceRow> {
-        val procedureCall = "EXEC GetAttendance @AssignmentIDs = ?"
+    suspend fun generateAllAttendanceReport(context: Context, assignmentIds: List<Subject>, dates: SemesterDates): List<AttendanceRow> {
+        val procedureCall = "EXEC GetAttendance @AssignmentIDs = ?, @StartDate = ?, @EndDate = ?"
         val assignments = assignmentIds.joinToString(",") { it.id.toString() }
 
         return withContext(Dispatchers.IO) {
@@ -56,6 +57,9 @@ object AttendanceReportHelper {
                 DatabaseHelper.getConnection()?.use {connection ->
                     connection.prepareStatement(procedureCall).use { pst ->
                         pst.setString(1, assignments)
+                        pst.setString(2, dates.startDate)
+                        pst.setString(3, dates.endDate)
+
                         pst.executeQuery().use { resultSet ->
                             while (resultSet.next()) {
                                 val roll = resultSet.getString("roll")

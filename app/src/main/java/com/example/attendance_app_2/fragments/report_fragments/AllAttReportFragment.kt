@@ -13,13 +13,16 @@ import com.example.attendance_app_2.R
 import com.example.attendance_app_2.databinding.FragmentAllAttReportBinding
 import com.example.attendance_app_2.db.AttendanceReportHelper.generateAllAttendanceReport
 import com.example.attendance_app_2.db.DataFetcher
+import com.example.attendance_app_2.db.DatesHelper
 import com.example.attendance_app_2.db.SeeAssignmentsHelper.fetchAssignmentIds
 import com.example.attendance_app_2.fragments.ReportViewFragment
+import com.example.attendance_app_2.models.SemesterDates
 import com.example.attendance_app_2.utils.BranchYearMapper
 import com.example.attendance_app_2.utils.CustomSpinnerAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 class AllAttReportFragment : Fragment(R.layout.fragment_all_att_report) {
 
@@ -54,7 +57,7 @@ class AllAttReportFragment : Fragment(R.layout.fragment_all_att_report) {
         etFromDate = binding.etFromDate
         etToDate = binding.etToDate
 
-        disableDates()
+        setDates();
 
         initializeSpinnerAdapters()
         setUpSpinnerListeners()
@@ -64,6 +67,8 @@ class AllAttReportFragment : Fragment(R.layout.fragment_all_att_report) {
 
             lifecycleScope.launch {
                 val assignmentIds = fetchAssignmentIds(selectedBranch, selectedSemester, selectedSection)
+                val startDate = etFromDate.text.toString()
+                val endDate = etToDate.text.toString()
 
                 if (assignmentIds.isEmpty()) {
                     withContext(Dispatchers.Main){
@@ -71,7 +76,7 @@ class AllAttReportFragment : Fragment(R.layout.fragment_all_att_report) {
                     }
                 }
 
-                val attendanceReport = generateAllAttendanceReport(requireContext(), assignmentIds)
+                val attendanceReport = generateAllAttendanceReport(requireContext(), assignmentIds, SemesterDates(startDate, endDate))
                 Log.d(TAG, "fetched Attendance Reprot: $attendanceReport")
                 withContext(Dispatchers.Main){
                     val reportViewFragment = ReportViewFragment()
@@ -88,10 +93,16 @@ class AllAttReportFragment : Fragment(R.layout.fragment_all_att_report) {
         }
     }
 
-    private fun disableDates() {
-        etFromDate.isEnabled = false
-        etToDate.isEnabled = false
+    private fun setDates() {
+        lifecycleScope.launch {
+            val dates = DatesHelper.fetchDates()
+            withContext(Dispatchers.Main){
+                binding.etFromDate.setText(dates.startDate)
+                binding.etToDate.setText(dates.endDate)
+            }
+        }
     }
+
 
     private fun initializeSpinner(spinner: Spinner, title: String): CustomSpinnerAdapter {
         val adapter = CustomSpinnerAdapter(requireContext(), title, mutableListOf())
