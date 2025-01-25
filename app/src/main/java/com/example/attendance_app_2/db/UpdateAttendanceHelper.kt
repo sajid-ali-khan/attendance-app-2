@@ -13,7 +13,7 @@ import java.time.format.DateTimeParseException
 
 object UpdateAttendanceHelper {
     val TAG = this::class.java.simpleName
-    suspend fun fetchSessions(context: Context, date: String): List<UpdateCard>{
+    suspend fun fetchSessions(context: Context, date: String, facultyId: String): List<UpdateCard>{
         val query = context.getString(R.string.queryFetchSessions)
         return withContext(Dispatchers.IO){
             val sessions = mutableListOf<UpdateCard>()
@@ -21,6 +21,7 @@ object UpdateAttendanceHelper {
                 DatabaseHelper.getConnection()?.use{connection ->
                     connection.prepareStatement(query).use{pst ->
                         pst.setString(1, date)
+                        pst.setString(2, facultyId)
                         pst.executeQuery()?.use{
                             while(it.next()){
                                 val sessionId = it.getInt("session_id")
@@ -32,7 +33,7 @@ object UpdateAttendanceHelper {
                                 val numAbsent = it.getInt("num_absent")
                                 val timestamp = it.getString("timestamp")
                                 val className = SeeAssignmentsHelper.formClassName(branch, sem, section)
-                                sessions.add(UpdateCard(sessionId, scode, className, timestamp, "$numPresent/$numAbsent"))
+                                sessions.add(UpdateCard(sessionId, scode, className, timestamp, "$numPresent/${numAbsent + numPresent}"))
                             }
                         }
                     }

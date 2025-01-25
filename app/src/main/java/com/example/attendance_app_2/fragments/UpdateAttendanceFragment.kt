@@ -12,6 +12,7 @@ import com.example.attendance_app_2.databinding.FragmentUpdateAttendanceBinding
 import com.example.attendance_app_2.db.UpdateAttendanceHelper.fetchSessions
 import com.example.attendance_app_2.db.UpdateAttendanceHelper.validDate
 import com.example.attendance_app_2.models.UpdateCard
+import com.example.attendance_app_2.sharedPrefs.SharedPrefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,9 +32,11 @@ class UpdateAttendanceFragment : Fragment(R.layout.fragment_update_attendance) {
             }
 
             lifecycleScope.launch {
-                val sessions = fetchSessions(requireContext(), date)
+                val facultyId = SharedPrefs.getEmpId(requireContext()) ?: return@launch
+                val sessions = fetchSessions(requireContext(), date, facultyId)
                 if (sessions.isEmpty()){
                     withContext(Dispatchers.Main){
+                        bindings.rvSessionContainer.adapter = null
                         Toast.makeText(requireContext(), "No sessions on the specified date.", Toast.LENGTH_SHORT).show()
                     }
                 }else{
