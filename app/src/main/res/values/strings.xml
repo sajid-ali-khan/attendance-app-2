@@ -42,4 +42,5 @@ where assignments.assignment_id = ?
     <string name="absent">A</string>
     <string name="tabs">tabs</string>
     <string name="queryFetchSessions">WITH filteredSession AS (     SELECT *      FROM session     WHERE date = CONVERT(DATE, ?, 3)     AND assignment_id in (         SELECT assignment_id FROM assignments         WHERE faculty_id = ?     ) ), filteredAssignments as(     SELECT session_id, assignments.assignment_id, course_id, section, num_present, num_absent, [timestamp] FROM assignments     INNER JOIN filteredSession     ON filteredSession.assignment_id = assignments.assignment_id ) SELECT filteredAssignments.SESSION_ID, scode, left(BRANCH, 1) as branch, SEM, section, num_present, num_absent, convert(varchar, timestamp, 100) as TIMESTAMP FROM course INNER JOIN filteredAssignments ON course.courseid = filteredAssignments.course_id</string>
+    <string name="queryFetchStudents">select attendance.attendance_id, students.roll, students.name, attendance.[status]\nFROM attendance\nINNER JOIN students\non attendance.roll = students.ROLL\nWHERE attendance.session_id = ?</string>
 </resources>
