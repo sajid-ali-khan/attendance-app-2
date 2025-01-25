@@ -4,11 +4,11 @@ import android.content.Context
 import android.util.Log
 import com.example.attendance_app_2.db.SeeAssignmentsHelper.formClassName
 import com.example.attendance_app_2.models.AssignedSubject
-import com.example.attendance_app_2.models.Student
 import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.attendance_app_2.R
+import com.example.attendance_app_2.models.GenericStudent
 import com.example.attendance_app_2.models.SessionDetails
 import com.example.attendance_app_2.models.Subject
 import java.sql.Statement
@@ -44,11 +44,11 @@ object MarkAttendanceHelper {
         }
     }
 
-    suspend fun fetchStudents(context: Context, assignment_id: String): List<Student>{
+    suspend fun fetchStudents(context: Context, assignment_id: String): List<GenericStudent>{
         val query = context.getString(R.string.query_fetchStudents)
 
         return withContext(Dispatchers.IO){
-            var students = mutableListOf<Student>()
+            var students = mutableListOf<GenericStudent>()
             try{
                 DatabaseHelper.getConnection()?.use{connection->
                     connection.prepareStatement(query).use {pst ->
@@ -57,7 +57,7 @@ object MarkAttendanceHelper {
                             while(it.next()){
                                 val roll = it.getString("ROLL")
                                 val name = it.getString("NAME")
-                                students.add(Student(roll, name, false))
+                                students.add(GenericStudent(roll, name, false))
                             }
                         }
                     }
@@ -69,7 +69,7 @@ object MarkAttendanceHelper {
         }
     }
 
-    suspend fun saveAttendanceWithTimestamp(sessionDetails: SessionDetails, students: List<Student>): Boolean {
+    suspend fun saveAttendanceWithTimestamp(sessionDetails: SessionDetails, students: List<GenericStudent>): Boolean {
         val sessionQuery = "INSERT INTO session (assignment_id, num_present, num_absent, date) VALUES (?, ?, ?, ?)"
         val attendanceQuery = "INSERT INTO attendance (session_id, roll, status) VALUES (?, ?, ?)"
 

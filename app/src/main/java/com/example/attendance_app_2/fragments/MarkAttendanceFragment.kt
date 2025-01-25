@@ -50,10 +50,10 @@ class MarkAttendanceFragment : Fragment(R.layout.fragment_mark_attendance) {
 
     }
 
-    fun onClassClick(assignmentId: String){
+    private fun onClassClick(assignmentId: String){
         lifecycleScope.launch{
             val students = MarkAttendanceHelper.fetchStudents(requireContext(), assignmentId)
-            Log.d(TAG, "fetched Students = ${students}")
+            Log.d(TAG, "fetched Students = $students")
             withContext(Dispatchers.Main){
                 safeNavigate {
                     val attendanceFragment = AttendanceFragment()

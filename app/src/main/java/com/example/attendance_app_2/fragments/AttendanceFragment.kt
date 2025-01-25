@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.attendance_app_2.R
-import com.example.attendance_app_2.adapters.StudentAdapter
+import com.example.attendance_app_2.adapters.GenericStudentAdapter
 import com.example.attendance_app_2.databinding.FragmentAttendanceBinding
 import com.example.attendance_app_2.db.MarkAttendanceHelper
+import com.example.attendance_app_2.models.GenericStudent
 import com.example.attendance_app_2.models.SessionDetails
-import com.example.attendance_app_2.models.Student
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -20,8 +20,8 @@ import java.util.Locale
 class AttendanceFragment : Fragment(R.layout.fragment_attendance) {
     lateinit var binding: FragmentAttendanceBinding
     lateinit var assignmentId: String
-    lateinit var studentsList: List<Student>
-    lateinit var adapter: StudentAdapter
+    lateinit var studentsList: List<GenericStudent>
+    lateinit var adapter: GenericStudentAdapter
 
     val TAG = this::class.java.simpleName
 
@@ -31,7 +31,7 @@ class AttendanceFragment : Fragment(R.layout.fragment_attendance) {
 
         arguments?.let {
             assignmentId = it.getString("assignmentId", "")
-            studentsList = it.getParcelableArrayList<Student>("studentList") ?: emptyList()
+            studentsList = it.getParcelableArrayList<GenericStudent>("studentList") ?: emptyList()
         }
 
         displayStudents()
@@ -54,7 +54,7 @@ class AttendanceFragment : Fragment(R.layout.fragment_attendance) {
     }
 
     private fun displayStudents(){
-        adapter = StudentAdapter(studentsList as MutableList<Student>)
+        adapter = GenericStudentAdapter(studentsList as MutableList<GenericStudent>)
         binding.rvStudentList.layoutManager = LinearLayoutManager(requireContext())
         binding.rvStudentList.adapter = adapter
     }
