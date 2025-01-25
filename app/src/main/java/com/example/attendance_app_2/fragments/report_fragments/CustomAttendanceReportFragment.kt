@@ -22,9 +22,8 @@ import com.example.attendance_app_2.utils.CustomSpinnerAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Date
 
-class AllAttReportFragment : Fragment(R.layout.fragment_all_att_report) {
+class CustomAttendanceReportFragment : Fragment(R.layout.fragment_all_att_report) {
 
     val TAG = this::class.java.simpleName
     private lateinit var binding: FragmentAllAttReportBinding

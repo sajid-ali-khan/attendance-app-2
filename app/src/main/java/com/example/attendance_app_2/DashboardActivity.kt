@@ -13,8 +13,8 @@ import com.example.attendance_app_2.fragments.MarkAttendanceFragment
 import com.example.attendance_app_2.fragments.SeeAssignmentsFragment
 import com.example.attendance_app_2.fragments.SemesterDatesFragment
 import com.example.attendance_app_2.fragments.UpdateAttendanceFragment
-import com.example.attendance_app_2.fragments.report_fragments.AllAttReportFragment
-import com.example.attendance_app_2.fragments.report_fragments.DefaultAttReportFragment
+import com.example.attendance_app_2.fragments.report_fragments.CustomAttendanceReportFragment
+import com.example.attendance_app_2.fragments.report_fragments.DefaultAttendanceReportFragment
 import com.example.attendance_app_2.sharedPrefs.SharedPrefs
 
 class DashboardActivity : AppCompatActivity() {
@@ -63,8 +63,8 @@ class DashboardActivity : AppCompatActivity() {
 
 
         //attendance report fragments
-        val defaultAttReportFragment = DefaultAttReportFragment()
-        val allAttReportFragment = AllAttReportFragment()
+        val defaultAttendanceReportFragment = DefaultAttendanceReportFragment()
+        val customAttendanceReportFragment = CustomAttendanceReportFragment()
 
 
         supportFragmentManager.beginTransaction().apply {
@@ -85,12 +85,12 @@ class DashboardActivity : AppCompatActivity() {
                 }
                 R.id.miDefaultAttendance -> {
                     supportFragmentManager.beginTransaction().apply {
-                        replace(binding.container.id, defaultAttReportFragment).commit()
+                        replace(binding.container.id, defaultAttendanceReportFragment).commit()
                     }
                 }
                 R.id.miCustomAttendance -> {
                     supportFragmentManager.beginTransaction().apply {
-                        replace(binding.container.id, allAttReportFragment).commit()
+                        replace(binding.container.id, customAttendanceReportFragment).commit()
                     }
                 }
                 R.id.miMarkAttendance -> {

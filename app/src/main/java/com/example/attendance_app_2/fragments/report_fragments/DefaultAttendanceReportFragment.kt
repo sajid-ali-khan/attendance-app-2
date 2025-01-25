@@ -23,7 +23,7 @@ import com.example.attendance_app_2.models.Subject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class DefaultAttReportFragment : Fragment(R.layout.fragment_def_att_report) {
+class DefaultAttendanceReportFragment : Fragment(R.layout.fragment_def_att_report) {
 
     private lateinit var binding: FragmentDefAttReportBinding
     private val TAG = this::class.java.simpleName
