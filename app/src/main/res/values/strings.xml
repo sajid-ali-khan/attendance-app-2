@@ -41,5 +41,5 @@ where assignments.assignment_id = ?
     <string name="present">P</string>
     <string name="absent">A</string>
     <string name="tabs">tabs</string>
-    <string name="queryFetchSessions">WITH filteredSession AS (\n    SELECT * \n    FROM session\n    WHERE date = CONVERT(DATE, ?, 3)\n),\nfilteredAssignments as(\n    SELECT session_id, assignments.assignment_id, course_id, section FROM assignments\n    INNER JOIN filteredSession\n    ON filteredSession.assignment_id = assignments.assignment_id\n)\nSELECT filteredAssignments.SESSION_ID, scode, left(BRANCH, 1) as branch, SEM, section\nFROM course\nINNER JOIN filteredAssignments\nON course.courseid = filteredAssignments.course_id;\n\n\n</string>
+    <string name="queryFetchSessions">"WITH filteredSession AS (     SELECT *      FROM session     WHERE date = CONVERT(DATE, ?, 3) ), filteredAssignments as(     SELECT session_id, assignments.assignment_id, course_id, section, num_present, num_absent, [timestamp] FROM assignments     INNER JOIN filteredSession     ON filteredSession.assignment_id = assignments.assignment_id ) SELECT filteredAssignments.SESSION_ID, scode, left(BRANCH, 1) as branch, SEM, section, num_present, num_absent, convert(varchar, timestamp, 100) as TIMESTAMP FROM course INNER JOIN filteredAssignments ON course.courseid = filteredAssignments.course_id"</string>
 </resources>

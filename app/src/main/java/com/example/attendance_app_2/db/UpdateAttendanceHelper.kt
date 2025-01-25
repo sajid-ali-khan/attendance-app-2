@@ -28,8 +28,11 @@ object UpdateAttendanceHelper {
                                 val branch = it.getString("branch")
                                 val sem = it.getString("sem")
                                 val section = it.getString("section")
+                                val numPresent = it.getInt("num_present")
+                                val numAbsent = it.getInt("num_absent")
+                                val timestamp = it.getString("timestamp")
                                 val className = SeeAssignmentsHelper.formClassName(branch, sem, section)
-                                sessions.add(UpdateCard(sessionId, scode, className))
+                                sessions.add(UpdateCard(sessionId, scode, className, timestamp, "$numPresent/$numAbsent"))
                             }
                         }
                     }

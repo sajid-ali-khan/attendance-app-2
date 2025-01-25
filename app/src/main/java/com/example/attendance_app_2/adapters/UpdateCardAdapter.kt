@@ -28,6 +28,8 @@ class UpdateCardAdapter(
         val sessionItem = sessionsList[position]
         binding.tvScode.text = sessionItem.scode
         binding.tvClassName.text = sessionItem.className
+        binding.tvTimestamp.text = sessionItem.timestamp
+        binding.tvNumPA.text = sessionItem.numPA
 
         binding.btnUpdate.setOnClickListener {
             onUpdateClick(sessionItem.sessionId)
