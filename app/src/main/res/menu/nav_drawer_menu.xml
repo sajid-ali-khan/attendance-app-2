@@ -20,10 +20,10 @@
         android:title="Semester Dates"/>
     <item
         android:id="@+id/miDefaultAttendance"
-        android:title="Default Attendance Report"/>"
+        android:title="Attendance Report"/>
     <item
         android:id="@+id/miCustomAttendance"
-        android:title="Custom Attendance Report"/>"
+        android:title="Custom Attendance Report"/>
     <item
         android:id="@+id/miLogout"
         android:title="Logout"/>
