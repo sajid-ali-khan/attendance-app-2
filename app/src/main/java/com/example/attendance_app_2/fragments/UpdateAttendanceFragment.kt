@@ -12,13 +12,6 @@ class UpdateAttendanceFragment : Fragment(R.layout.fragment_update_attendance) {
         super.onViewCreated(view, savedInstanceState)
         bindings = FragmentUpdateAttendanceBinding.bind(view)
 
-        bindings.btnFetchSessions.setOnClickListener{
-            //get the entered date
-            //validate the date
-            //fetch assignments of that date
-            //handle the clicks
-            //fetch the students with the click
-            //display students in a recycler view
-        }
+
     }
 }

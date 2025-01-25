@@ -15,6 +15,7 @@ import com.example.attendance_app_2.db.AttendanceReportHelper.generateAllAttenda
 import com.example.attendance_app_2.db.DataFetcher
 import com.example.attendance_app_2.db.DatesHelper
 import com.example.attendance_app_2.db.SeeAssignmentsHelper.fetchAssignmentIds
+import com.example.attendance_app_2.db.UpdateAttendanceHelper.validDate
 import com.example.attendance_app_2.fragments.ReportViewFragment
 import com.example.attendance_app_2.models.SemesterDates
 import com.example.attendance_app_2.utils.BranchYearMapper
@@ -73,21 +74,27 @@ class CustomAttendanceReportFragment : Fragment(R.layout.fragment_all_att_report
                     withContext(Dispatchers.Main){
                         Toast.makeText(requireContext(), "No assignments found", Toast.LENGTH_SHORT).show()
                     }
-                }
-
-                val attendanceReport = generateAllAttendanceReport(requireContext(), assignmentIds, SemesterDates(startDate, endDate))
-                Log.d(TAG, "fetched Attendance Reprot: $attendanceReport")
-                withContext(Dispatchers.Main){
-                    val reportViewFragment = ReportViewFragment()
-                    reportViewFragment.arguments = Bundle().apply {
-                        putParcelableArrayList("attendanceReport", ArrayList(attendanceReport))
+                }else if (!validDate(startDate) || !validDate(endDate)){
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(requireContext(), "Invalid dates", Toast.LENGTH_SHORT).show()
                     }
+                }else{
+                    val attendanceReport = generateAllAttendanceReport(requireContext(), assignmentIds, SemesterDates(startDate, endDate))
+                    Log.d(TAG, "fetched Attendance Reprot: $attendanceReport")
+                    withContext(Dispatchers.Main){
+                        val reportViewFragment = ReportViewFragment()
+                        reportViewFragment.arguments = Bundle().apply {
+                            putParcelableArrayList("attendanceReport", ArrayList(attendanceReport))
+                        }
 
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.container, reportViewFragment)
-                        .addToBackStack(null)
-                        .commit()
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.container, reportViewFragment)
+                            .addToBackStack(null)
+                            .commit()
+                    }
                 }
+
+
             }
         }
     }

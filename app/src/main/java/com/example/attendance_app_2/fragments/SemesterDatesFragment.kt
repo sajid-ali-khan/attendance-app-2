@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.databinding.FragmentSemesterDatesBinding
 import com.example.attendance_app_2.db.DatesHelper
+import com.example.attendance_app_2.db.UpdateAttendanceHelper.validDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -50,16 +51,5 @@ class SemesterDatesFragment : Fragment(R.layout.fragment_semester_dates) {
         }
     }
 
-    fun validDate(dateString: String): Boolean {
-        val originalFormat = DateTimeFormatter.ofPattern("dd/MM/yy")
-        return try {
-            val sqlServerFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            val date = LocalDate.parse(dateString, originalFormat)
 
-            val sqlDate = date.format(sqlServerFormat)
-            true
-        } catch (e: DateTimeParseException) {
-            false
-        }
-    }
 }

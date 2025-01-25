@@ -7,6 +7,9 @@ import com.example.attendance_app_2.models.UpdateCard
 import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 object UpdateAttendanceHelper {
     val TAG = this::class.java.simpleName
@@ -35,6 +38,19 @@ object UpdateAttendanceHelper {
                 Log.e(TAG, "fetchSessions: SQL error", e)
             }
             sessions
+        }
+    }
+
+    fun validDate(dateString: String): Boolean {
+        val originalFormat = DateTimeFormatter.ofPattern("dd/MM/yy")
+        return try {
+            val sqlServerFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+            val date = LocalDate.parse(dateString, originalFormat)
+
+            val sqlDate = date.format(sqlServerFormat)
+            true
+        } catch (e: DateTimeParseException) {
+            false
         }
     }
 }
