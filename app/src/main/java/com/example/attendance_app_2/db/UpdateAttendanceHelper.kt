@@ -85,4 +85,55 @@ object UpdateAttendanceHelper {
             false
         }
     }
+
+    suspend fun updateAttendance(updatedStudents: List<GenericStudent>): Boolean {
+        val updateQuery = "UPDATE attendance SET status = ? WHERE attendance_id = ?"
+        return withContext(Dispatchers.IO){
+            var ack = false
+            try{
+                DatabaseHelper.getConnection()?.use{connection ->
+                    connection.autoCommit = false
+                    try{
+                        connection.prepareStatement(updateQuery).use {
+                            for (student in updatedStudents) {
+                                it.setBoolean(1, student.attStatus)
+                                it.setInt(2, student.attendanceId!!)
+                                it.addBatch()
+                            }
+                            it.executeBatch()
+                        }
+                        connection.commit()
+                        ack = true
+                    }catch(e: Exception){
+                        connection.rollback()
+                    }
+                }
+            }catch(e: Exception){
+                Log.e(TAG, "updateAttendance: Couldn't update the attendance", e)
+            }
+            ack
+        }
+    }
+
+    suspend fun updateTheSession(context: Context, sessionId: Int, numPresent: Int, numAbsent: Int): Boolean {
+        val query = context.getString(R.string.queryUpdateSession)
+
+        return withContext(Dispatchers.IO){
+            var ack = false
+            try{
+                DatabaseHelper.getConnection()?.use{connection ->
+                    connection.prepareStatement(query).use {
+                        it.setInt(1, numPresent)
+                        it.setInt(2, numAbsent)
+                        it.setInt(3, sessionId)
+                        val rowsUpdated = it.executeUpdate()
+                        if (rowsUpdated == 1) ack = true
+                    }
+                }
+            }catch(e: Exception){
+                Log.e(TAG, "updateTheSession: SQL Error", e)
+            }
+            ack
+        }
+    }
 }

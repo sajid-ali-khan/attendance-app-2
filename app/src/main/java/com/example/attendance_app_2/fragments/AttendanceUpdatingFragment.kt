@@ -2,17 +2,22 @@ package com.example.attendance_app_2.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.adapters.GenericStudentAdapter
 import com.example.attendance_app_2.databinding.FragmentAttendanceBinding
+import com.example.attendance_app_2.db.UpdateAttendanceHelper
 import com.example.attendance_app_2.models.GenericStudent
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 
 class AttendanceUpdatingFragment: Fragment(R.layout.fragment_attendance) {
     private lateinit var binding: FragmentAttendanceBinding
     var students = emptyList<GenericStudent>()
+    var sessionId = 0
     lateinit var adapter: GenericStudentAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -22,6 +27,7 @@ class AttendanceUpdatingFragment: Fragment(R.layout.fragment_attendance) {
 
         arguments?.let {
             students = it.getParcelableArrayList<GenericStudent>("studentList") ?: emptyList()
+            sessionId = it.getInt("sessionId")
         }
 
         displayStudents()
@@ -91,7 +97,21 @@ class AttendanceUpdatingFragment: Fragment(R.layout.fragment_attendance) {
     }
 
     private fun updateAttendance(onComplete: (Boolean) -> Unit) {
-
+        //collect the updated students list
+        val updatedStudents = adapter.getUpdatedStudentList()
+        val numPresent = updatedStudents.count { it.attStatus }
+        val numAbsent = updatedStudents.size - numPresent
+        //pass the students list (updated one) to the helper method
+        lifecycleScope.launch {
+            //update in the session table
+            val sessionAck = UpdateAttendanceHelper.updateTheSession(requireContext(), sessionId, numPresent, numAbsent)
+            if (!sessionAck){
+                onComplete(false)
+            }else{
+                val ack = UpdateAttendanceHelper.updateAttendance(updatedStudents)
+                onComplete(ack)
+            }
+        }
     }
 
     private fun successDialog(){

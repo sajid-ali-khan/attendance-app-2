@@ -71,6 +71,7 @@ class UpdateAttendanceFragment : Fragment(R.layout.fragment_update_attendance) {
                     val attendanceUpdatingFragment = AttendanceUpdatingFragment()
                     attendanceUpdatingFragment.arguments = Bundle().apply {
                         putParcelableArrayList("studentList", ArrayList(students))
+                        putInt("sessionId", sessionId)
                     }
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.container, attendanceUpdatingFragment)
