@@ -45,7 +45,7 @@ class UpdateAttendanceFragment : Fragment(R.layout.fragment_update_attendance) {
                     }
                 }else{
                     withContext(Dispatchers.Main){
-                        displaySessions(sessions);
+                        displaySessions(sessions)
                     }
                 }
             }
@@ -87,6 +87,5 @@ class UpdateAttendanceFragment : Fragment(R.layout.fragment_update_attendance) {
             action()
         }
     }
-
 
 }
