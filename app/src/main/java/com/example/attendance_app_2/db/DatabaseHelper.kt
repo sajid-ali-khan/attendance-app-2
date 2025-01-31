@@ -10,7 +10,7 @@ object DatabaseHelper {
     var con: Connection? = null
 
     suspend fun getConnection(): Connection? = withContext(Dispatchers.IO){
-        val ip = "192.168.98.44"
+        val ip = "192.168.0.147"
         val port = "1433"
         val dbname = "test"
         val un = "sajid"

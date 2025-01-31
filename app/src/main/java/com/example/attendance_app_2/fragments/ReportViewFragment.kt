@@ -48,6 +48,8 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
         spValue = binding.spValue
         spColumn = binding.spColumn
 
+        selectedSymbol = symbols[0]
+
         populateSpinner(symbols, spSymbol)
         populateSpinner(values.map { it.toString() }, spValue)
 

@@ -74,6 +74,7 @@ object ReportViewHelper {
         textView.setTypeface(null, android.graphics.Typeface.BOLD)
         textView.setPadding(16, 16, 16, 16)
         textView.minWidth = 200
+        textView.setTextColor(context.getColor(R.color.white))
         textView.setBackgroundResource(R.drawable.tv_background)
         return textView
     }
