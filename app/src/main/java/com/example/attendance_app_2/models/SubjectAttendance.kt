@@ -4,4 +4,5 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class AttendanceRow(val roll: String, val name: String, val percentages: List<SubjectAttendance>): Parcelable
+data class SubjectAttendance(val subject: Subject, val percentage: Float) : Parcelable
+

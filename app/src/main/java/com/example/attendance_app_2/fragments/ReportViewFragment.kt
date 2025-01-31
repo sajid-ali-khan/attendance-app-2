@@ -1,5 +1,8 @@
 package com.example.attendance_app_2.fragments
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -17,6 +20,7 @@ import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.createHea
 import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.createTextView
 import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.extractSubjects
 import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.filterAttendance
+import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.getHeaderNames
 import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.populateTable
 import com.example.attendance_app_2.models.AttendanceRow
 import com.example.attendance_app_2.models.Filter
@@ -30,6 +34,7 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
     private lateinit var tableLayout: TableLayout
 
     var attendanceReport = emptyList<AttendanceRow>()
+    var filteredAttendance = emptyList<AttendanceRow>()
 
     private lateinit var selectedSymbol: String
     var selectedValue = 100
@@ -39,6 +44,8 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
 
     val symbols = listOf("<=", "<", ">", ">=")
     val values = listOf(100, 75, 65, 40)
+
+    val CREATE_DOCUMENT_CODE = 51
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,10 +64,14 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
             attendanceReport = it.getParcelableArrayList("attendanceReport") ?: emptyList()
         }
 
-        if (attendanceReport.isEmpty()){
-            Toast.makeText(requireContext(), "Unable to fetch the attendance report!!", Toast.LENGTH_SHORT).show();
+        if (attendanceReport.isEmpty()) {
+            binding.attContainer.visibility = View.GONE
+            Toast.makeText(requireContext(), "No attendance data available.", Toast.LENGTH_SHORT).show()
             return
+        } else {
+            binding.attContainer.visibility = View.VISIBLE
         }
+
 
         subs = extractSubjects(attendanceReport[0])
         subs = subs.reversed()
@@ -70,6 +81,10 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
         populateTable(requireContext(), tableLayout, attendanceReport)
 
         setUpFilterListeners();
+
+        binding.btnSave.setOnClickListener {
+            exportAsCsv()
+        }
 
     }
 
@@ -82,7 +97,8 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
                 id: Long
             ) {
                 selectedSymbol = symbols[position]
-                filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                filteredAttendance = filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                populateTable(requireContext(), tableLayout , filteredAttendance)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
@@ -96,7 +112,8 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
                 id: Long
             ) {
                 selectedValue = values[position]
-                filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                filteredAttendance = filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                populateTable(requireContext(), tableLayout , filteredAttendance)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
@@ -110,7 +127,8 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
                 id: Long
             ) {
                 selectedSubject = position
-                filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                filteredAttendance = filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                populateTable(requireContext(), tableLayout , filteredAttendance)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("Not yet implemented")
@@ -124,4 +142,62 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         sp.adapter = adapter
     }
+
+    private fun exportAsCsv(){
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply{
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/csv"
+            putExtra(Intent.EXTRA_TITLE, "AttendanceReport.csv")
+        }
+        startActivityForResult(intent, CREATE_DOCUMENT_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CREATE_DOCUMENT_CODE && resultCode == RESULT_OK){
+            data?.data?.let {uri ->
+                if(writeToFile(uri)){
+                    Toast.makeText(requireContext(), "File saved successfully", Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(requireContext(), "Failed to save the file", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun writeToFile(uri: Uri): Boolean{
+        return try{
+            requireContext().contentResolver.openOutputStream(uri)?.use{outputStream ->
+                var content = ""
+                if (filteredAttendance.isEmpty()){
+                    content = convertToCsv(attendanceReport)
+                }else{
+                    content = convertToCsv(filteredAttendance)
+                }
+                outputStream.write(content.toByteArray())
+            }
+            true
+        }catch(e: Exception){
+            Log.e(this::class.simpleName, "writeToFile: File operation error", e)
+            false
+        }
+    }
+
+    private fun convertToCsv(attendanceReport: List<AttendanceRow>): String {
+        val csvData = StringBuilder()
+        csvData.append(getHeaderNames(attendanceReport[0]).joinToString(","))
+        csvData.append("\n")
+        for (row in attendanceReport) {
+            val rowList = mutableListOf<String>()
+            rowList.add(row.roll)
+            rowList.add(row.name)
+            for (subject in row.percentages) {
+                rowList.add(subject.percentage.toString())
+            }
+            csvData.append(rowList.joinToString(","))
+            csvData.append("\n")
+        }
+        return csvData.toString()
+    }
+
 }

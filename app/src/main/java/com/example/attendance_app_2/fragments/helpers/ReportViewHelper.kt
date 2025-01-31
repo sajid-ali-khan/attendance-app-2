@@ -16,7 +16,7 @@ object ReportViewHelper {
     fun extractSubjects(attendanceRow: AttendanceRow): List<Subject> {
         val subjects = mutableListOf<Subject>()
         for (subject in attendanceRow.percentages) {
-            subjects.add(subject.first)
+            subjects.add(subject.subject)
         }
         return subjects
     }
@@ -35,7 +35,7 @@ object ReportViewHelper {
             row.addView(createTextView(context, attRow.roll))
             row.addView(createTextView(context, attRow.name))
             for (subject in attRow.percentages){
-                row.addView(createTextView(context, subject.second.toString()))
+                row.addView(createTextView(context, subject.percentage.toString()))
             }
             if (even){
                 row.setBackgroundResource(R.drawable.att_row_2)
@@ -50,12 +50,20 @@ object ReportViewHelper {
         val header = TableRow(context)
         header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
         header.setBackgroundResource(R.drawable.header_background)
-        header.addView(createHeaderTextView(context,"ROLL NUMBER"))
-        header.addView(createHeaderTextView(context,"NAME"))
-        for (subject in head.percentages){
-            header.addView(createHeaderTextView(context, subject.first.code))
+        for (fieldName in getHeaderNames(head)){
+            header.addView(createHeaderTextView(context, fieldName))
         }
         return header
+    }
+
+    fun getHeaderNames(firstRow: AttendanceRow): List<String> {
+        val headerNames = mutableListOf<String>()
+        headerNames.add("ROLL NUMBER")
+        headerNames.add("NAME")
+        for (subject in firstRow.percentages) {
+            headerNames.add(subject.subject.code)
+        }
+        return headerNames
     }
 
     fun createTextView(context: Context, text: String): TextView {
@@ -79,21 +87,20 @@ object ReportViewHelper {
         return textView
     }
 
-    fun filterAttendance(context: Context, tableLayout: TableLayout, attendanceReport: List<AttendanceRow>, filter: Filter){
+    fun filterAttendance(context: Context, tableLayout: TableLayout, attendanceReport: List<AttendanceRow>, filter: Filter): List<AttendanceRow>{
         var  filteredAttendance = emptyList<AttendanceRow>()
         try{
-            val subjectIndex = attendanceReport[0].percentages.indexOfFirst { it.first.id == filter.subjectId }
+            val subjectIndex = attendanceReport[0].percentages.indexOfFirst { it.subject.id == filter.subjectId }
             filteredAttendance = when (filter.symbol){
-                "<=" -> attendanceReport.filter { it.percentages[subjectIndex].second <= filter.value }
-                "<" -> attendanceReport.filter { it.percentages[subjectIndex].second < filter.value }
-                ">" -> attendanceReport.filter { it.percentages[subjectIndex].second > filter.value }
-                ">=" -> attendanceReport.filter { it.percentages[subjectIndex].second >= filter.value }
+                "<=" -> attendanceReport.filter { it.percentages[subjectIndex].percentage <= filter.value }
+                "<" -> attendanceReport.filter { it.percentages[subjectIndex].percentage < filter.value }
+                ">" -> attendanceReport.filter { it.percentages[subjectIndex].percentage > filter.value }
+                ">=" -> attendanceReport.filter { it.percentages[subjectIndex].percentage >= filter.value }
                 else -> attendanceReport
             }
         }catch(e: Exception){
             Log.e(TAG, "filterAttendance: SQL error "+ e.message)
         }
-
-        populateTable(context, tableLayout, filteredAttendance)
+        return filteredAttendance
     }
 }

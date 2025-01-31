@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.attendance_app_2.models.AttendanceRow
 import com.example.attendance_app_2.models.SemesterDates
 import com.example.attendance_app_2.models.Subject
+import com.example.attendance_app_2.models.SubjectAttendance
 import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,7 +36,9 @@ object AttendanceReportHelper {
                                 val name = resultSet.getString("name")
                                 val percentage = resultSet.getFloat("AttendancePercentage")
 
-                                attendanceReport.add(AttendanceRow(roll, name, listOf(Pair(subject, percentage))))
+                                attendanceReport.add(AttendanceRow(roll, name, listOf(
+                                    SubjectAttendance(subject, percentage)
+                                )))
                             }
                         }
                     }
@@ -64,12 +67,12 @@ object AttendanceReportHelper {
                             while (resultSet.next()) {
                                 val roll = resultSet.getString("roll")
                                 val name = resultSet.getString("name")
-                                val percentages = mutableListOf<Pair<Subject, Float>>()
+                                val percentages = mutableListOf<SubjectAttendance>()
                                 for (subject in assignmentIds) {
                                     val percentage = resultSet.getFloat("Assignment_"+subject.id)
-                                    percentages.add(Pair(subject, percentage))
+                                    percentages.add(SubjectAttendance(subject, percentage))
                                 }
-                                percentages.add(Pair(Subject(-1, "Total"), resultSet.getFloat("TotalAttendance")))
+                                percentages.add(SubjectAttendance(Subject(-1, "Total"), resultSet.getFloat("TotalAttendance")))
                                 attendanceReport.add(AttendanceRow(roll, name, percentages))
                             }
                         }
