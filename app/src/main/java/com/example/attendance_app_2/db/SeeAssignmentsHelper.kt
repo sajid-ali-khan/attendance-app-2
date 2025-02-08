@@ -5,7 +5,6 @@ import android.util.Log
 import com.example.attendance_app_2.models.Assignment
 import com.example.attendance_app_2.models.Subject
 import com.example.attendance_app_2.utils.BranchYearMapper
-import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -32,7 +31,7 @@ object SeeAssignmentsHelper {
         return withContext(Dispatchers.IO) {
             val assignments = mutableListOf<Assignment>()
             try {
-                DatabaseHelper.getConnection()?.use {connection ->
+                DatabaseHelper.getConnection()?.use { connection ->
                     connection.prepareStatement(query).use {pst ->
                         pst.setString(1, scheme)
                         pst.setString(2, branch)
@@ -81,7 +80,7 @@ object SeeAssignmentsHelper {
         return withContext(Dispatchers.IO){
             val assignmentIds = mutableListOf<Subject>()
             try {
-                DatabaseHelper.getConnection()?.use{connection ->
+                DatabaseHelper.getConnection()?.use{ connection ->
                     connection.prepareStatement(query)?.use{pst ->
                         pst.setString(1, branch)
                         pst.setString(2, semester)

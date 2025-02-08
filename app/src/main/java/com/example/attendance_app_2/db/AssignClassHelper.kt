@@ -2,7 +2,6 @@ package com.example.attendance_app_2.db
 
 import android.content.Context
 import android.util.Log
-import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.sql.SQLException

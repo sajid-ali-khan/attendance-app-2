@@ -2,7 +2,6 @@ package com.example.attendance_app_2.db
 
 import android.util.Log
 import com.example.attendance_app_2.models.SemesterDates
-import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -38,7 +37,7 @@ object DatesHelper {
         return withContext(Dispatchers.IO){
             var datesSaved = false
             try{
-                DatabaseHelper.getConnection()?.use{connection->
+                DatabaseHelper.getConnection()?.use{ connection->
                     connection.prepareStatement(query).use{pst ->
                         pst.setString(1, startDate)
                         pst.setString(2, endDate)

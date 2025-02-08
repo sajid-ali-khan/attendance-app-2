@@ -10,14 +10,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.databinding.FragmentReportViewBinding
-import com.example.attendance_app_2.fragments.helpers.ReportViewHelper
-import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.createHeader
-import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.createTextView
 import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.extractSubjects
 import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.filterAttendance
 import com.example.attendance_app_2.fragments.helpers.ReportViewHelper.getHeaderNames
@@ -46,6 +42,7 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
     val values = listOf(100, 75, 65, 40)
 
     val CREATE_DOCUMENT_CODE = 51
+    var filtered = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -98,6 +95,7 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
             ) {
                 selectedSymbol = symbols[position]
                 filteredAttendance = filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                filtered = true
                 populateTable(requireContext(), tableLayout , filteredAttendance)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -113,6 +111,7 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
             ) {
                 selectedValue = values[position]
                 filteredAttendance = filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                filtered = true
                 populateTable(requireContext(), tableLayout , filteredAttendance)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -128,6 +127,7 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
             ) {
                 selectedSubject = position
                 filteredAttendance = filterAttendance(requireContext(), tableLayout, attendanceReport, Filter(selectedSymbol, selectedValue, subs[selectedSubject].id))
+                filtered = true
                 populateTable(requireContext(), tableLayout , filteredAttendance)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -169,11 +169,12 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
         return try{
             requireContext().contentResolver.openOutputStream(uri)?.use{outputStream ->
                 var content = ""
-                if (filteredAttendance.isEmpty()){
+                if (!filtered){
                     content = convertToCsv(attendanceReport)
                 }else{
                     content = convertToCsv(filteredAttendance)
                 }
+                Log.d("Content is..", "writeToFile: ${content}")
                 outputStream.write(content.toByteArray())
             }
             true
@@ -183,11 +184,16 @@ class ReportViewFragment : Fragment(R.layout.fragment_report_view) {
         }
     }
 
-    private fun convertToCsv(attendanceReport: List<AttendanceRow>): String {
+    private fun convertToCsv(givenReport: List<AttendanceRow>): String {
         val csvData = StringBuilder()
-        csvData.append(getHeaderNames(attendanceReport[0]).joinToString(","))
+        if (givenReport.isEmpty()){
+            csvData.append(getHeaderNames(attendanceReport[0]).joinToString(","))
+            csvData.append("\n")
+            return csvData.toString()
+        }
+        csvData.append(getHeaderNames(givenReport[0]).joinToString(","))
         csvData.append("\n")
-        for (row in attendanceReport) {
+        for (row in givenReport) {
             val rowList = mutableListOf<String>()
             rowList.add(row.roll)
             rowList.add(row.name)

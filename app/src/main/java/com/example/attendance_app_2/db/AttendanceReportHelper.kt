@@ -6,7 +6,6 @@ import com.example.attendance_app_2.models.AttendanceRow
 import com.example.attendance_app_2.models.SemesterDates
 import com.example.attendance_app_2.models.Subject
 import com.example.attendance_app_2.models.SubjectAttendance
-import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -26,7 +25,7 @@ object AttendanceReportHelper {
 
         return withContext(Dispatchers.IO) {
             try {
-                DatabaseHelper.getConnection()?.use{connection ->
+                DatabaseHelper.getConnection()?.use{ connection ->
                     connection.prepareStatement(procedureCall).use { pst ->
                         pst.setString(1, subject.id.toString())
 
@@ -57,7 +56,7 @@ object AttendanceReportHelper {
         return withContext(Dispatchers.IO) {
             val attendanceReport = mutableListOf<AttendanceRow>()
             try {
-                DatabaseHelper.getConnection()?.use {connection ->
+                DatabaseHelper.getConnection()?.use { connection ->
                     connection.prepareStatement(procedureCall).use { pst ->
                         pst.setString(1, assignments)
                         pst.setString(2, dates.startDate)

@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.example.attendance_app_2.models.Course
 import com.example.attendance_app_2.models.Faculty
-import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -136,7 +135,7 @@ object DataFetcher {
         return withContext(Dispatchers.IO) {
             val faculties = mutableListOf<Faculty>()
             try{
-                DatabaseHelper.getConnection()?.use {connection ->
+                DatabaseHelper.getConnection()?.use { connection ->
                     connection.createStatement().use {st ->
                         st.executeQuery(query).use {
                             while (it.next()) {
@@ -159,7 +158,7 @@ object DataFetcher {
         return withContext(Dispatchers.IO){
             val branches = mutableListOf<Int>()
             try {
-                DatabaseHelper.getConnection()?.use {connection ->
+                DatabaseHelper.getConnection()?.use { connection ->
                     connection.createStatement().use {st->
                         st.executeQuery(query).use {
                             while (it.next()) {
@@ -180,7 +179,7 @@ object DataFetcher {
         return withContext(Dispatchers.IO){
             val semesters = mutableListOf<Int>()
             try {
-                DatabaseHelper.getConnection()?.use {connection ->
+                DatabaseHelper.getConnection()?.use { connection ->
                     connection.prepareStatement(query).use {pst ->
                         pst.setString(1, branch)
                         pst.executeQuery().use {

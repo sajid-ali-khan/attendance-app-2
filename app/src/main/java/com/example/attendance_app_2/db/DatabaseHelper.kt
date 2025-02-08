@@ -1,4 +1,4 @@
-package com.example.demokotlin
+package com.example.attendance_app_2.db
 
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +10,7 @@ object DatabaseHelper {
     var con: Connection? = null
 
     suspend fun getConnection(): Connection? = withContext(Dispatchers.IO){
-        val ip = "192.168.0.147"
+        val ip = "192.168.31.166"
         val port = "1433"
         val dbname = "test"
         val un = "sajid"

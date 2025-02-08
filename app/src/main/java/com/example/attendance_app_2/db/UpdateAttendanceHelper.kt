@@ -5,7 +5,6 @@ import android.util.Log
 import com.example.attendance_app_2.R
 import com.example.attendance_app_2.models.GenericStudent
 import com.example.attendance_app_2.models.UpdateCard
-import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -19,7 +18,7 @@ object UpdateAttendanceHelper {
         return withContext(Dispatchers.IO){
             val sessions = mutableListOf<UpdateCard>()
             try{
-                DatabaseHelper.getConnection()?.use{connection ->
+                DatabaseHelper.getConnection()?.use{ connection ->
                     connection.prepareStatement(query).use{pst ->
                         pst.setString(1, date)
                         pst.setString(2, facultyId)
@@ -51,7 +50,7 @@ object UpdateAttendanceHelper {
         return withContext(Dispatchers.IO){
             val students = mutableListOf<GenericStudent>()
             try{
-                DatabaseHelper.getConnection()?.use{connection ->
+                DatabaseHelper.getConnection()?.use{ connection ->
                     connection.prepareStatement(query).use { pst ->
                         pst.setInt(1, sessionId)
                         pst.executeQuery().use {
@@ -91,7 +90,7 @@ object UpdateAttendanceHelper {
         return withContext(Dispatchers.IO){
             var ack = false
             try{
-                DatabaseHelper.getConnection()?.use{connection ->
+                DatabaseHelper.getConnection()?.use{ connection ->
                     connection.autoCommit = false
                     try{
                         connection.prepareStatement(updateQuery).use {
@@ -121,7 +120,7 @@ object UpdateAttendanceHelper {
         return withContext(Dispatchers.IO){
             var ack = false
             try{
-                DatabaseHelper.getConnection()?.use{connection ->
+                DatabaseHelper.getConnection()?.use{ connection ->
                     connection.prepareStatement(query).use {
                         it.setInt(1, numPresent)
                         it.setInt(2, numAbsent)

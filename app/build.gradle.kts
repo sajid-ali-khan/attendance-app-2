@@ -56,6 +56,7 @@ dependencies {
 
     implementation("androidx.viewpager2:viewpager2:1.1.0-beta01")
     implementation("com.google.android.material:material:1.9.0")
-
+    implementation("com.zaxxer:HikariCP:4.0.3")
+    implementation("com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8")
 
 }

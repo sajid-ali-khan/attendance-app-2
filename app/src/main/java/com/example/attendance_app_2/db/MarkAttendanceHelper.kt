@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.example.attendance_app_2.db.SeeAssignmentsHelper.formClassName
 import com.example.attendance_app_2.models.AssignedSubject
-import com.example.demokotlin.DatabaseHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.example.attendance_app_2.R
@@ -21,7 +20,7 @@ object MarkAttendanceHelper {
         return withContext(Dispatchers.IO) {
             val facultyAssignments = mutableListOf<AssignedSubject>()
             try {
-                DatabaseHelper.getConnection()?.use {connection ->
+                DatabaseHelper.getConnection()?.use { connection ->
                     connection.prepareStatement(query).use {pst ->
                         pst.setString(1, empId)
                         pst.executeQuery().use {
@@ -50,7 +49,7 @@ object MarkAttendanceHelper {
         return withContext(Dispatchers.IO){
             var students = mutableListOf<GenericStudent>()
             try{
-                DatabaseHelper.getConnection()?.use{connection->
+                DatabaseHelper.getConnection()?.use{ connection->
                     connection.prepareStatement(query).use {pst ->
                         pst.setString(1, assignment_id)
                         pst.executeQuery().use {
@@ -77,7 +76,7 @@ object MarkAttendanceHelper {
             var sessionId = -1
             var result = false
             try{
-                DatabaseHelper.getConnection()?.use {connection ->
+                DatabaseHelper.getConnection()?.use { connection ->
                     connection.autoCommit = false
 
                     try{
