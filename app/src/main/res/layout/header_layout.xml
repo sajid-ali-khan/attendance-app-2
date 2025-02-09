@@ -6,30 +6,32 @@
     android:orientation="vertical"
     android:paddingVertical="16dp"
     android:paddingHorizontal="24dp"
+    android:id="@+id/navHeader"
     android:background="?attr/colorPrimary">
 
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:textStyle="bold"
         android:layout_marginTop="8dp"
         android:text="Employee name" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tvRole"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="12sp"
         android:layout_marginTop="8dp"
         android:text="Role" />
 </LinearLayout>
