@@ -27,7 +27,7 @@ A smart attendance tracking application designed for the faculty members of **GP
 
 ## 🖼️ Screenshots
 
-| Login Page | Dashboard | Attendance Report |
+| Login Page | Navigation Menu | Attendance Report |
 |------------|-----------|-------------------|
 | ![Login](https://github.com/user-attachments/assets/2204d206-6bc9-4445-8402-48b07d666c6c)| ![Navigation Menu(HOD)](https://github.com/user-attachments/assets/613779c6-e39d-4be1-921d-748c09cfd756)| ![Report](https://github.com/user-attachments/assets/33f15be7-3b19-471d-8381-6a1042fd1f57)|
 
@@ -40,3 +40,5 @@ A smart attendance tracking application designed for the faculty members of **GP
 - **Database access:** Kotlin-JDBC
 - **Database:** SQL Server
 
+## Demo Video
+[Click here to see the demo video](https://drive.google.com/file/d/1JOXdjwRGVCB9b9C-pf4KIqLhcs8Yt3-E/view?usp=sharing)
